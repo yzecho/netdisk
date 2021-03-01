@@ -1,0 +1,42 @@
+2021-02-28 21:56:34.278  INFO 3933 --- [main] io.yzecho.netdisk.NetdiskApplication     : Starting NetdiskApplication using Java 15.0.1 on yEchodeMBP.lan with PID 3933 (/Users/yecho/Desktop/毕设/netdisk/target/classes started by yecho in /Users/yecho/Desktop/毕设/netdisk)
+2021-02-28 21:56:34.288  INFO 3933 --- [main] io.yzecho.netdisk.NetdiskApplication     : No active profile set, falling back to default profiles: default
+2021-02-28 21:56:35.702  WARN 3933 --- [main] io.undertow.websockets.jsr               : UT026010: Buffer pool was not set on WebSocketDeploymentInfo, the default pool will be used
+2021-02-28 21:56:35.733  INFO 3933 --- [main] io.undertow.servlet                      : Initializing Spring embedded WebApplicationContext
+2021-02-28 21:56:35.734  INFO 3933 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1368 ms
+2021-02-28 21:56:35.787  WARN 3933 --- [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is java.lang.RuntimeException: java.lang.IllegalArgumentException: Filter must not be null
+2021-02-28 21:56:35.795  INFO 3933 --- [main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2021-02-28 21:56:35.833 ERROR 3933 --- [main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is java.lang.RuntimeException: java.lang.IllegalArgumentException: Filter must not be null
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:162) ~[spring-boot-2.4.1.jar:2.4.1]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:582) ~[spring-context-5.3.2.jar:5.3.2]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:144) ~[spring-boot-2.4.1.jar:2.4.1]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:767) ~[spring-boot-2.4.1.jar:2.4.1]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:759) ~[spring-boot-2.4.1.jar:2.4.1]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:426) ~[spring-boot-2.4.1.jar:2.4.1]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:326) ~[spring-boot-2.4.1.jar:2.4.1]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1309) ~[spring-boot-2.4.1.jar:2.4.1]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1298) ~[spring-boot-2.4.1.jar:2.4.1]
+	at io.yzecho.netdisk.NetdiskApplication.main(NetdiskApplication.java:15) ~[classes/:na]
+Caused by: java.lang.RuntimeException: java.lang.IllegalArgumentException: Filter must not be null
+	at io.undertow.servlet.core.DeploymentManagerImpl.deploy(DeploymentManagerImpl.java:257) ~[undertow-servlet-2.2.3.Final.jar:2.2.3.Final]
+	at org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory.createManager(UndertowServletWebServerFactory.java:345) ~[spring-boot-2.4.1.jar:2.4.1]
+	at org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory.getWebServer(UndertowServletWebServerFactory.java:314) ~[spring-boot-2.4.1.jar:2.4.1]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:181) ~[spring-boot-2.4.1.jar:2.4.1]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:159) ~[spring-boot-2.4.1.jar:2.4.1]
+	... 9 common frames omitted
+Caused by: java.lang.IllegalArgumentException: Filter must not be null
+	at org.springframework.util.Assert.notNull(Assert.java:201) ~[spring-core-5.3.2.jar:5.3.2]
+	at org.springframework.boot.web.servlet.AbstractFilterRegistrationBean.getDescription(AbstractFilterRegistrationBean.java:203) ~[spring-boot-2.4.1.jar:2.4.1]
+	at org.springframework.boot.web.servlet.RegistrationBean.onStartup(RegistrationBean.java:48) ~[spring-boot-2.4.1.jar:2.4.1]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:234) ~[spring-boot-2.4.1.jar:2.4.1]
+	at org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory$Initializer.onStartup(UndertowServletWebServerFactory.java:504) ~[spring-boot-2.4.1.jar:2.4.1]
+	at io.undertow.servlet.core.DeploymentManagerImpl$1.call(DeploymentManagerImpl.java:204) ~[undertow-servlet-2.2.3.Final.jar:2.2.3.Final]
+	at io.undertow.servlet.core.DeploymentManagerImpl$1.call(DeploymentManagerImpl.java:187) ~[undertow-servlet-2.2.3.Final.jar:2.2.3.Final]
+	at io.undertow.servlet.core.ServletRequestContextThreadSetupAction$1.call(ServletRequestContextThreadSetupAction.java:42) ~[undertow-servlet-2.2.3.Final.jar:2.2.3.Final]
+	at io.undertow.servlet.core.ContextClassLoaderSetupAction$1.call(ContextClassLoaderSetupAction.java:43) ~[undertow-servlet-2.2.3.Final.jar:2.2.3.Final]
+	at io.undertow.servlet.core.DeploymentManagerImpl.deploy(DeploymentManagerImpl.java:255) ~[undertow-servlet-2.2.3.Final.jar:2.2.3.Final]
+	... 13 common frames omitted
+
