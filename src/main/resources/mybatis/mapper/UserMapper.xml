@@ -13,12 +13,11 @@
         <result property="role" column="role" jdbcType="INTEGER"/>
     </resultMap>
 
-    <sql id="allColumn">
-        user_id
-        , open_id, file_store_id, user_name, email, password, register_time, image_path, role
-    </sql>
+    <!--全部字段-->
+    <sql id="allColumn"> user_id
+    , open_id, file_store_id, user_name,email,password,register_time, image_path,role</sql>
 
-    <!--    添加语句的字段列表-->
+    <!--添加语句的字段列表-->
     <sql id="insertColumn">
         <if test="openId != null and openId != ''">
             open_id,
@@ -93,7 +92,7 @@
         </if>
     </sql>
 
-    <!--    新增用户-->
+    <!--新增user:哪个字段不为空就添加哪列数据,返回自增主键-->
     <insert id="insert" keyProperty="userId" useGeneratedKeys="true">
         insert into user
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -104,74 +103,96 @@
         </trim>
     </insert>
 
-    <!--删除用户-->
-    <delete id="deleteUserByUserId">
+    <!--删除user:通过主键-->
+    <delete id="deleteById">
         delete from user
         <where>
             user_id = #{userId}
         </where>
     </delete>
-    <!--查询单个用户-->
-    <select id="queryUserByUserId" resultMap="UserMap">
+
+    <!--查询单个user-->
+    <select id="queryById" resultMap="UserMap">
         select
-        <include refid="allColumn"/>
+        <include refid="allColumn"></include>
         from user
         <where>
             user_id = #{userId}
         </where>
     </select>
-    <!--查询单个用户-->
-    <select id="queryUserByOpenId" resultMap="UserMap">
+
+    <!--查询单个user-->
+    <select id="getUserByOpenId" resultMap="UserMap">
         select
-        <include refid="allColumn"/>
+        <include refid="allColumn"></include>
         from user
         <where>
             open_id = #{openId}
         </where>
     </select>
-    <!--查询单个用户-->
-    <select id="queryUserByEmail" resultMap="UserMap">
+
+    <!--查询单个user-->
+    <select id="getUserByEmail" resultMap="UserMap">
         select
-        <include refid="allColumn"/>
+        <include refid="allColumn"></include>
         from user
         <where>
             email = #{email}
         </where>
     </select>
-    <!--查询全部用户-->
-    <select id="queryAll" resultMap="UserMap">
+
+    <!--查询单个user-->
+    <select id="queryByEmailAndPwd" resultMap="UserMap">
         select
-        <include refid="allColumn"/>
+        <include refid="allColumn"></include>
+        from user
+        <where>
+            email = #{email} and password = #{password}
+        </where>
+    </select>
+
+    <!--查询所有user-->
+    <select id="queryAllByLimit" resultMap="UserMap">
+        select
+        <include refid="allColumn"></include>
         from user
     </select>
-    <!--筛选条件查询-->
+
+    <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="UserMap">
         select
-        <include refid="allColumn"/>
+        <include refid="allColumn"></include>
         from user
-        <trim prefix="where" prefixOverrides="true" suffixOverrides=",">
-            <include refid="commonsValue"/>
+        <trim prefix="where" prefixOverrides="and" suffixOverrides=",">
+            <include refid="commonsValue"></include>
         </trim>
     </select>
 
-    <!--修改用户-->
+    <!--通过主键修改数据-->
     <update id="update">
         update user
         <set>
-            <include refid="commonsValue" />
+            <include refid="commonsValue"></include>
         </set>
         <where>
-            user_id = #{user_id}
+            user_id = #{userId}
         </where>
     </update>
-
-    <select id="queryUsers" resultType="io.yzecho.netdisk.vo.UserVO">
-        select u.user_id, user_name, u.email, image_path, register_time, float(current_size/max_size*100) `current`, max_size, permission from user u
-        inner join file_store f
-        on u.user_id = f.user_id
+    <select id="getUsers" resultType="io.yzecho.netdisk.model.vo.UserVO">
+        SELECT u.user_id,
+               user_name,
+               image_path,
+               register_time,
+               u.email,
+               FLOOR(current_size / max_size * 100) `current`,
+               max_size,
+               permission
+        from user u
+                 INNER JOIN file_store f
+                            ON u.user_id = f.user_id
     </select>
-
     <select id="getUsersCount" resultType="java.lang.Integer">
-        select count(*) from user;
+        select count(*)
+        from user;
     </select>
 </mapper>

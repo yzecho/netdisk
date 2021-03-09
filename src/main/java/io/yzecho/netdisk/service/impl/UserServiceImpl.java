@@ -1,9 +1,9 @@
 package io.yzecho.netdisk.service.impl;
 
-import io.yzecho.netdisk.mapper.UserMapper;
 import io.yzecho.netdisk.model.User;
+import io.yzecho.netdisk.service.BaseService;
 import io.yzecho.netdisk.service.UserService;
-import io.yzecho.netdisk.vo.UserVO;
+import io.yzecho.netdisk.model.vo.UserVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,13 +14,7 @@ import java.util.List;
  * @date 16/01/2021 20:08
  */
 @Service
-public class UserServiceImpl implements UserService {
-
-    final UserMapper userMapper;
-
-    public UserServiceImpl(UserMapper userMapper) {
-        this.userMapper = userMapper;
-    }
+public class UserServiceImpl extends BaseService implements UserService {
 
     @Override
     public boolean insert(User user) {

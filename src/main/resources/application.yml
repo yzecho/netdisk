@@ -44,11 +44,15 @@ spring:
   thymeleaf:
     enabled: true
     encoding: UTF-8
+    prefix: classpath:/templates/
+    suffix: .html
+    servlet:
+      content-type: text/html
   # 配置数据源
   datasource:
     username: root
-    password: lz1015515
-    url: jdbc:mysql://127.0.0.1:3306/baoda_cloud?serverTimezone=Hongkong&useAffectedRows=true
+    password: liuzhe11
+    url: jdbc:mysql://127.0.0.1:3306/cloud?serverTimezone=Hongkong&useAffectedRows=true
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
@@ -88,3 +92,9 @@ spring:
     multipart:
       max-file-size: 1024MB
       max-request-size: 1024MB
+
+oauth:
+  github:
+    client-id: 51019c989a28a1a8517e
+    client-secret: ebbcf7ac3f1c6333ce4671193d4934c47951e1d2
+    redirect-uri: http://localhost:8080/baoda-cloud/loginByGitHub

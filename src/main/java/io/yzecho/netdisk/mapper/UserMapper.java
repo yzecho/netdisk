@@ -1,7 +1,7 @@
 package io.yzecho.netdisk.mapper;
 
 import io.yzecho.netdisk.model.User;
-import io.yzecho.netdisk.vo.UserVO;
+import io.yzecho.netdisk.model.vo.UserVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

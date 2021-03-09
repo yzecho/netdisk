@@ -1,20 +1,16 @@
 package io.yzecho.netdisk.controller;
 
 import io.yzecho.netdisk.model.FileStore;
+import io.yzecho.netdisk.model.FileStoreStatistics;
 import io.yzecho.netdisk.model.User;
-import io.yzecho.netdisk.service.FileFolderService;
-import io.yzecho.netdisk.service.FileStoreService;
-import io.yzecho.netdisk.service.MyFileService;
-import io.yzecho.netdisk.service.UserService;
+import io.yzecho.netdisk.model.dto.AccessTokenDTO;
+
 import io.yzecho.netdisk.utils.LogUtil;
 import io.yzecho.netdisk.utils.MailUtil;
 import org.slf4j.Logger;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -29,9 +25,14 @@ public class UserController extends BaseController {
 
     private final Logger logger = LogUtil.getInstance(UserController.class);
 
-    public UserController(UserService userService, MyFileService myFileService, FileFolderService fileFolderService, FileStoreService fileStoreService, JavaMailSenderImpl mailSender) {
-        super(userService, myFileService, fileFolderService, fileStoreService, mailSender);
-    }
+    @Value("${oauth.github.client-id}")
+    private String clientId;
+
+    @Value("${oauth.github.client-secret}")
+    private String clientSecret;
+
+    @Value("${oauth.github.redirect-uri}")
+    private String redirectUri;
 
     @PostMapping("/register")
     public String register(User user, String code, Map<String, Object> map) {
@@ -60,6 +61,11 @@ public class UserController extends BaseController {
         return "redirect:/index";
     }
 
+    @GetMapping("/login")
+    public String index() {
+        return "index";
+    }
+
     @PostMapping("/login")
     public String login(User user, Map<String, Object> map) {
         User userByEmail = userService.queryUserByEmail(user.getEmail());
@@ -75,12 +81,27 @@ public class UserController extends BaseController {
         }
     }
 
+    @GetMapping("/index")
+    public String index(Map<String, Object> map) {
+        FileStoreStatistics statistics = myFileService.getCountStatistics(loginUser.getFileStoreId());
+        statistics.setFileStore(fileStoreService.getFileStoreById(loginUser.getFileStoreId()));
+        map.put("statistics", statistics);
+        return "u-admin/index";
+    }
+
     /**
-     * 第三方GitHub登录
+     * 第三方GitHub登录callback
      */
     @GetMapping("/loginByGitHub")
-    public void login() {
-        
+    public void callback(@RequestParam("code") String code, @RequestParam("state") String state) {
+        AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
+        accessTokenDTO.setClientId(clientId);
+        accessTokenDTO.setClientSecret(clientSecret);
+        accessTokenDTO.setCode(code);
+        accessTokenDTO.setRedirectUri(redirectUri);
+        accessTokenDTO.setState(state);
+
+        gitHubProvider.getAccessToken(accessTokenDTO);
     }
 
     @ResponseBody

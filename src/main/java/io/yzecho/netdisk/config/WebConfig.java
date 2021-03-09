@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -52,7 +53,7 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginHandlerInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/", "/temp-file", "/error400Page", "/error401Page", "/error404Page", "/error500Page", "/uploadTempFile", "/admin", "/sendCode", "/loginByQQ", "/login", "/register", "/file/share", "/connection",
+                .excludePathPatterns("/", "/temp-file", "/error400Page", "/error401Page", "/error404Page", "/error500Page", "/uploadTempFile", "/admin", "/sendCode", "/loginByGitHub", "/login", "/register", "/file/share", "/connection",
                         "/asserts/**", "/**/*.css", "/**/*.js", "/**/*.png ", "/**/*.jpg"
                         , "/**/*.jpeg", "/**/*.gif", "/**/fonts/*", "/**/*.svg");
     }
@@ -69,5 +70,10 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
         ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND, "/error404Page");
         ErrorPage error500Page = new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/error500Page");
         registry.addErrorPages(error400Page, error401Page, error404Page, error500Page);
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
     }
 }

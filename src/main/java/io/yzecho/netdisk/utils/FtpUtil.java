@@ -68,7 +68,7 @@ public class FtpUtil {
             filePath = new String(filePath.getBytes("GBK"), StandardCharsets.ISO_8859_1);
             filename = new String(filename.getBytes("GBK"), StandardCharsets.ISO_8859_1);
             if (!initFtpClient()) {
-                return result;
+                return false;
             }
             // 切换到上传目录
             ftpClient.enterLocalPassiveMode();
@@ -83,7 +83,7 @@ public class FtpUtil {
                     tempPath += "/" + dir;
                     if (!ftpClient.changeWorkingDirectory(tempPath)) {
                         if (!ftpClient.makeDirectory(tempPath)) {
-                            return result;
+                            return false;
                         } else {
                             ftpClient.changeWorkingDirectory(tempPath);
                         }
@@ -95,7 +95,7 @@ public class FtpUtil {
             // 上传文件
             ftpClient.enterLocalPassiveMode();
             if (!ftpClient.storeFile(filename, input)) {
-                return result;
+                return false;
             }
             input.close();
             ftpClient.logout();
@@ -128,7 +128,7 @@ public class FtpUtil {
             remotePath = new String(remotePath.getBytes("GBK"), StandardCharsets.ISO_8859_1);
             filename = new String(filename.getBytes("GBK"), StandardCharsets.ISO_8859_1);
             if (!initFtpClient()) {
-                return result;
+                return false;
             }
             // 转移到FTP服务器目录
             ftpClient.changeWorkingDirectory(remotePath);
@@ -166,12 +166,11 @@ public class FtpUtil {
      * @return
      */
     public static boolean deleteFile(String remotePath, String filename) {
-        boolean result = false;
         try {
             remotePath = new String(remotePath.getBytes("GBK"), StandardCharsets.ISO_8859_1);
             filename = new String(filename.getBytes("GBK"), StandardCharsets.ISO_8859_1);
             if (!initFtpClient()) {
-                return result;
+                return false;
             }
             ;
             // 转移到FTP服务器目录
@@ -180,7 +179,7 @@ public class FtpUtil {
             FTPFile[] fs = ftpClient.listFiles();
             for (FTPFile ftpFile : fs) {
                 if ("".equals(filename)) {
-                    return result;
+                    return false;
                 }
                 if (ftpFile.getName().equals(filename)) {
                     String filePath = remotePath + "/" + filename;
@@ -200,7 +199,7 @@ public class FtpUtil {
                 }
             }
         }
-        return result;
+        return false;
     }
 
     /**
@@ -214,7 +213,7 @@ public class FtpUtil {
         try {
             remotePath = new String(remotePath.getBytes("GBK"), StandardCharsets.ISO_8859_1);
             if (!initFtpClient()) {
-                return result;
+                return false;
             }
             // 转移到FTP服务器目录
             ftpClient.changeWorkingDirectory(remotePath);
@@ -252,7 +251,7 @@ public class FtpUtil {
             oldName = new String(oldName.getBytes("GBK"), StandardCharsets.ISO_8859_1);
             newName = new String(newName.getBytes("GBK"), StandardCharsets.ISO_8859_1);
             if (!initFtpClient()) {
-                return result;
+                return false;
             }
             ftpClient.enterLocalPassiveMode();
             ftpClient.rename(oldName, newName);
@@ -283,7 +282,7 @@ public class FtpUtil {
         try {
             filePath = new String(filePath.getBytes("GBK"), StandardCharsets.ISO_8859_1);
             if (!initFtpClient()) {
-                return result;
+                return false;
             }
             FTPFile[] fs = ftpClient.listFiles(filePath);
             System.out.println(Arrays.stream(fs).findFirst());

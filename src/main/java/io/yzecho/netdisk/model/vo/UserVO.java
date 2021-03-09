@@ -1,4 +1,4 @@
-package io.yzecho.netdisk.vo;
+package io.yzecho.netdisk.model.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

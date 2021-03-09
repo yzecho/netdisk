@@ -1,7 +1,7 @@
 package io.yzecho.netdisk.service;
 
 import io.yzecho.netdisk.model.User;
-import io.yzecho.netdisk.vo.UserVO;
+import io.yzecho.netdisk.model.vo.UserVO;
 
 import java.util.List;
 
