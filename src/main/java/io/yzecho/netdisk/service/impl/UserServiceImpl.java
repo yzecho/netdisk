@@ -3,7 +3,7 @@ package io.yzecho.netdisk.service.impl;
 import io.yzecho.netdisk.model.User;
 import io.yzecho.netdisk.service.BaseService;
 import io.yzecho.netdisk.service.UserService;
-import io.yzecho.netdisk.model.vo.UserVO;
+import io.yzecho.netdisk.model.vo.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,8 +32,8 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public User queryUserByOpenId(Integer openId) {
-        return userMapper.queryUserByOpenId(openId);
+    public User queryUserByGithubId(String githubId) {
+        return userMapper.queryUserByGithubId(githubId);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public List<User> queryAll() {
+    public List<User> queryAllByLimit() {
         return userMapper.queryAll();
     }
 

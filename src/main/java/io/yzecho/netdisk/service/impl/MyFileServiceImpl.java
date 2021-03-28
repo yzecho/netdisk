@@ -2,6 +2,7 @@ package io.yzecho.netdisk.service.impl;
 
 import io.yzecho.netdisk.model.FileStoreStatistics;
 import io.yzecho.netdisk.model.MyFile;
+import io.yzecho.netdisk.service.BaseService;
 import io.yzecho.netdisk.service.MyFileService;
 import org.springframework.stereotype.Service;
 
@@ -13,49 +14,49 @@ import java.util.List;
  * @date 17/01/2021 12:52
  */
 @Service
-public class MyFileServiceImpl implements MyFileService {
+public class MyFileServiceImpl extends BaseService implements MyFileService {
     @Override
     public Integer deleteFileByFileId(Integer myFileId) {
-        return null;
+        return myFileMapper.deleteFileByFileId(myFileId);
     }
 
     @Override
     public Integer deleteFileByParentFolderId(Integer folderId) {
-        return null;
+        return myFileMapper.deleteFileByParentFolderId(folderId);
     }
 
     @Override
     public Integer addFileByFileStoreId(MyFile myFile) {
-        return null;
+        return myFileMapper.addFileByFileStoreId(myFile);
     }
 
     @Override
     public MyFile getFileByFileId(Integer myFileId) {
-        return null;
+        return myFileMapper.getFileByFileId(myFileId);
     }
 
     @Override
-    public Integer updateFile(MyFile record) {
-        return null;
+    public Integer updateFileByFileId(MyFile record) {
+        return myFileMapper.updateFile(record);
     }
 
     @Override
     public List<MyFile> getRootFilesByFileStoreId(Integer fileStoreId) {
-        return null;
+        return myFileMapper.getRootFilesByFileStoreId(fileStoreId);
     }
 
     @Override
     public List<MyFile> getFilesByParentFolderId(Integer parentFolderId) {
-        return null;
+        return myFileMapper.getFilesByParentFolderId(parentFolderId);
     }
 
     @Override
     public List<MyFile> getFilesByType(Integer storeId, Integer type) {
-        return null;
+        return myFileMapper.getFilesByType(storeId, type);
     }
 
     @Override
     public FileStoreStatistics getCountStatistics(Integer id) {
-        return null;
+        return myFileMapper.getCountStatistics(id);
     }
 }

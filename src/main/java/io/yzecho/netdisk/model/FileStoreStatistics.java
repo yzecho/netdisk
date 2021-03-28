@@ -3,6 +3,7 @@ package io.yzecho.netdisk.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -11,6 +12,7 @@ import java.io.Serializable;
  * @desc 文件仓库数据统计
  * @date 13/01/2021 14:05
  */
+@NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder

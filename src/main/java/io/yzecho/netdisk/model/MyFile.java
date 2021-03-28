@@ -3,6 +3,7 @@ package io.yzecho.netdisk.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
  * @desc
  * @date 13/01/2021 00:04
  */
+@NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder

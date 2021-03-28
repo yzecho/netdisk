@@ -28,7 +28,9 @@
                 <br>
                 <p>以下方式免注册</p>
                 <p class="badge-wrap">
-                    <a title="GitHub登录免注册" href="https://github.com/login/oauth/authorize?client_id=51019c989a28a1a8517e&redirect_uri=http://localhost:8080/baoda-cloud/loginByGitHub&scope=user&state=1" class="badge btn-success"><i
+                    <a title="GitHub登录免注册"
+                       href="https://github.com/login/oauth/authorize?client_id=51019c989a28a1a8517e&redirect_uri=http://localhost:8080/baoda-cloud/loginByGitHub&scope=user&state=1"
+                       class="badge btn-success"><i
                             class="fab fa-github"></i></a>
                     <a title="上传临时文件" class="badge btn-upload js-btn btn-success" data-target="upload"><i
                             class="fa fa-upload" aria-hidden="true"></i></a>
@@ -138,8 +140,8 @@
             return;
         }
         var location = window.location.href;
-        let strings = location.split("moti-cloud");
-        $('#url').val(strings[0] + "moti-cloud");
+        let strings = location.split("baoda-cloud");
+        $('#url').val(strings[0] + "baoda-cloud");
         $('#tempFile').submit();
     }
 

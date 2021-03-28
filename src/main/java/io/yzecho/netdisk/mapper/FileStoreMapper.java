@@ -33,32 +33,41 @@ public interface FileStoreMapper {
      * @param fileStoreId
      * @return
      */
-    FileStore getFileStoreById(Integer fileStoreId);
+    FileStore getFileStoreByFileStoreId(Integer fileStoreId);
 
     /**
-     * 修改仓库当前已使用的容量
+     * 增加容量
      *
-     * @param id
+     * @param fileStoreId
      * @param size
      * @return
      */
-    Integer updateSize(Integer id, Integer size);
+    Integer addSize(Integer fileStoreId, Integer size);
+
+    /**
+     * 减少容量
+     *
+     * @param fileStoreId
+     * @param size
+     * @return
+     */
+    Integer subSize(Integer fileStoreId, Integer size);
 
     /**
      * 修改仓库权限
      *
-     * @param id
+     * @param userId
      * @param permission
      * @param size
      * @return
      */
-    Integer updatePermission(Integer id, Integer permission, Integer size);
+    Integer updatePermission(Integer userId, Integer permission, Integer size);
 
     /**
      * 通过ID删除文件仓库
      *
-     * @param id
+     * @param fileStoreId
      * @return
      */
-    Integer deleteFileStoreById(Integer id);
+    Integer deleteByFileStoreId(Integer fileStoreId);
 }

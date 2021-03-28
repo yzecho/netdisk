@@ -98,9 +98,9 @@
 						current: $('#current').html(),
 						backfun: function(e) {
 							var location = window.location.href;
-							let strings = location.split("moti-cloud");
+							let strings = location.split("baoda-cloud");
 							console.log(strings[0]);
-							window.location.href = strings[0]+"moti-cloud/manages-users?cur="+e['current'];
+							window.location.href = strings[0]+"baoda-cloud/manages-users?cur="+e['current'];
 						}
 					});
 					function updateStore(id) {
@@ -131,7 +131,7 @@
 				</script>
 			</section>
 		</div>
-		<div th:replace="commons/bar::#footer"></div>
+<!--		<div th:replace="commons/bar::#footer"></div>-->
 	</div>
 </div>
 <script src="u-admin/dist/modules/jquery.min.js"></script>

@@ -1,7 +1,8 @@
 package io.yzecho.netdisk.service;
 
 import io.yzecho.netdisk.model.User;
-import io.yzecho.netdisk.model.vo.UserVO;
+import io.yzecho.netdisk.model.vo.*;
+
 
 import java.util.List;
 
@@ -37,12 +38,12 @@ public interface UserService {
     User queryUserByUserId(Integer userId);
 
     /**
-     * 通过OpenId查询单条数据
+     * 通过githubId查询单条数据
      *
-     * @param openId
+     * @param githubId
      * @return
      */
-    User queryUserByOpenId(Integer openId);
+    User queryUserByGithubId(String githubId);
 
     /**
      * 通过邮箱查询单条数据
@@ -57,7 +58,7 @@ public interface UserService {
      *
      * @return
      */
-    List<User> queryAll();
+    List<User> queryAllByLimit();
 
     /**
      * 实体作为筛选条件

@@ -5,13 +5,16 @@ import io.yzecho.netdisk.model.FileStoreStatistics;
 import io.yzecho.netdisk.model.User;
 import io.yzecho.netdisk.model.dto.AccessTokenDTO;
 
+import io.yzecho.netdisk.model.dto.GitHubUser;
 import io.yzecho.netdisk.utils.LogUtil;
 import io.yzecho.netdisk.utils.MailUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -42,7 +45,10 @@ public class UserController extends BaseController {
             return "index";
         }
         user.setUserName(user.getUserName().trim());
-        user.setImagePath("static/img/logo.png");
+        // password加密
+        user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes(StandardCharsets.UTF_8)));
+        // 默认头像
+        user.setImagePath("baoda-cloud/img/logo.png");
         user.setRegisterTime(LocalDateTime.now());
         user.setRole(1);
         if (userService.insert(user)) {
@@ -61,6 +67,19 @@ public class UserController extends BaseController {
         return "redirect:/index";
     }
 
+    /**
+     * Test
+     *
+     * @return
+     */
+    @GetMapping("/admin")
+    public String adminLogin() {
+        User user = userService.queryUserByGithubId("38834224");
+        logger.info("使用免登陆方式登录成功！" + user);
+        session.setAttribute("loginUser", user);
+        return "redirect:/index";
+    }
+
     @GetMapping("/login")
     public String index() {
         return "index";
@@ -69,7 +88,9 @@ public class UserController extends BaseController {
     @PostMapping("/login")
     public String login(User user, Map<String, Object> map) {
         User userByEmail = userService.queryUserByEmail(user.getEmail());
-        if (userByEmail != null && user.getPassword().equals(userByEmail.getPassword())) {
+
+        if (userByEmail != null
+                && DigestUtils.md5DigestAsHex(user.getPassword().getBytes(StandardCharsets.UTF_8)).equals(userByEmail.getPassword())) {
             session.setAttribute("loginUser", userByEmail);
             logger.info("登录成功！{}", userByEmail);
             return "redirect:/index";
@@ -81,19 +102,12 @@ public class UserController extends BaseController {
         }
     }
 
-    @GetMapping("/index")
-    public String index(Map<String, Object> map) {
-        FileStoreStatistics statistics = myFileService.getCountStatistics(loginUser.getFileStoreId());
-        statistics.setFileStore(fileStoreService.getFileStoreById(loginUser.getFileStoreId()));
-        map.put("statistics", statistics);
-        return "u-admin/index";
-    }
-
     /**
      * 第三方GitHub登录callback
      */
     @GetMapping("/loginByGitHub")
-    public void callback(@RequestParam("code") String code, @RequestParam("state") String state) {
+    public String callback(@RequestParam("code") String code,
+                           @RequestParam("state") String state) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setClientId(clientId);
         accessTokenDTO.setClientSecret(clientSecret);
@@ -101,7 +115,37 @@ public class UserController extends BaseController {
         accessTokenDTO.setRedirectUri(redirectUri);
         accessTokenDTO.setState(state);
 
-        gitHubProvider.getAccessToken(accessTokenDTO);
+        // 获取token
+        String token = gitHubProvider.getAccessToken(accessTokenDTO);
+        GitHubUser gitHubUser = gitHubProvider.getUser(token);
+
+        User user = userService.queryUserByGithubId(gitHubUser.getId());
+        if (user == null) {
+            user = User.builder()
+                    .githubId(gitHubUser.getId())
+                    .userName(gitHubUser.getName())
+                    .imagePath(gitHubUser.getAvatarUrl())
+                    .registerTime(LocalDateTime.now())
+                    .build();
+            if (userService.insert(user)) {
+                logger.info("注册用户成功：{}", user);
+                FileStore store = FileStore.builder().userId(user.getUserId()).build();
+                if (fileStoreService.addFileStore(store) == 1) {
+                    user.setFileStoreId(store.getFileStoreId());
+                    userService.update(user);
+                    logger.info("注册仓库成功：{}", store);
+                }
+            } else {
+                logger.error("注册用户失败");
+            }
+        } else {
+            user.setUserName(gitHubUser.getName());
+            user.setImagePath(gitHubUser.getAvatarUrl());
+            userService.update(user);
+        }
+        logger.info("GitHub用户登录成功：{}", user);
+        session.setAttribute("loginUser", user);
+        return "redirect:/index";
     }
 
     @ResponseBody

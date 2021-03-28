@@ -1,7 +1,7 @@
 package io.yzecho.netdisk.mapper;
 
 import io.yzecho.netdisk.model.User;
-import io.yzecho.netdisk.model.vo.UserVO;
+import io.yzecho.netdisk.model.vo.*;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -39,12 +39,12 @@ public interface UserMapper {
     User queryUserByUserId(Integer userId);
 
     /**
-     * 通过OpenId查询单条数据
+     * 通过githubId查询单条数据
      *
-     * @param openId
+     * @param githubId
      * @return
      */
-    User queryUserByOpenId(Integer openId);
+    User queryUserByGithubId(String githubId);
 
     /**
      * 通过邮箱查询单条数据

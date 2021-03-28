@@ -16,13 +16,26 @@ import java.util.Arrays;
  */
 public class FtpUtil {
 
-    private static final String HOST = "192.168.0.102";
+    /**
+     * yzecho mac ftp host
+     * <p>
+     * private static final String HOST = "192.168.0.102";
+     * /
+     * /**
+     * admin mac ftp host
+     *private static final String HOST = "10.60.103.187";
+     */
+
+    /**
+     * ziru mac ftp host
+     */
+    private static final String HOST = "192.168.199.205";
 
     private static final int PORT = 21;
 
-    private static final String USERNAME = "yzecho";
+    private static final String USERNAME = "admin";
 
-    private static final String PASSWORD = "yzecho";
+    private static final String PASSWORD = "admin";
 
     private static final String BASE_PATH = "";
 
@@ -117,12 +130,12 @@ public class FtpUtil {
     /**
      * 从FTP服务器下载文件
      *
-     * @param remotePath FTP服务器上的相对路径
-     * @param filename   要下载的文件名
-     * @param localPath  本地路径（宿主）
+     * @param remotePath   FTP服务器上的相对路径
+     * @param filename     要下载的文件名
+     * @param outputStream 本地路径输出流（宿主）
      * @return
      */
-    public static boolean downloadFile(String remotePath, String filename, String localPath) {
+    public static boolean downloadFile(String remotePath, String filename, OutputStream outputStream) {
         boolean result = false;
         try {
             remotePath = new String(remotePath.getBytes("GBK"), StandardCharsets.ISO_8859_1);
@@ -137,7 +150,7 @@ public class FtpUtil {
             for (FTPFile ftpFile : fs) {
                 if (ftpFile.getName().equals(filename)) {
                     ftpClient.enterLocalPassiveMode();
-                    FileOutputStream outputStream = new FileOutputStream(localPath);
+                    // FileOutputStream outputStream = new FileOutputStream(localPath);
                     ftpClient.retrieveFile(remotePath + "/" + filename, outputStream);
                     result = true;
                     outputStream.close();
@@ -172,7 +185,7 @@ public class FtpUtil {
             if (!initFtpClient()) {
                 return false;
             }
-            ;
+
             // 转移到FTP服务器目录
             ftpClient.changeWorkingDirectory(remotePath);
             ftpClient.enterLocalPassiveMode();

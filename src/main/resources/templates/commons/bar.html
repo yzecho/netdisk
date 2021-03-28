@@ -67,27 +67,27 @@
                 <ul class="menu-dropdown">
                     <li th:class="${currUri == 'doc'?'active':''}">
                         <a href="doc-files"><i class="ion ion-document-text"></i> 我的文档
-                            <div th:text="${statistics.doc}" class="badge badge-primary">10</div>
+                            <div th:text="${statistics.docNum}" class="badge badge-primary">10</div>
                         </a>
                     </li>
                     <li th:class="${currUri == 'image'?'active':''}">
                         <a href="image-files"><i class="ion ion-image"></i> 我的图像
-                            <div th:text="${statistics.image}" class="badge badge-primary">10</div>
+                            <div th:text="${statistics.imageNum}" class="badge badge-primary">10</div>
                         </a>
                     </li>
                     <li th:class="${currUri == 'video'?'active':''}">
                         <a href="video-files"><i class="ion ion-ios-videocam"></i> 我的视频
-                            <div th:text="${statistics.video}" class="badge badge-primary">10</div>
+                            <div th:text="${statistics.videoNum}" class="badge badge-primary">10</div>
                         </a>
                     </li>
                     <li th:class="${currUri == 'music'?'active':''}">
                         <a href="music-files"><i class="ion ion-ios-musical-notes"></i> 我的音频
-                            <div th:text="${statistics.music}" class="badge badge-primary">10</div>
+                            <div th:text="${statistics.musicNum}" class="badge badge-primary">10</div>
                         </a>
                     </li>
                     <li th:class="${currUri == 'other'?'active':''}">
                         <a href="other-files"><i class="ion ion-help-circled"></i> 其他文件
-                            <div th:text="${statistics.other}" class="badge badge-primary">10</div>
+                            <div th:text="${statistics.otherNum}" class="badge badge-primary">10</div>
                         </a>
                     </li>
                 </ul>

@@ -13,11 +13,15 @@ logging:
   file:
     name: log/baoda-cloud.log
 
-
 # mybatis配置
 mybatis:
   config-location: classpath:mybatis/mybatis-config.xml
   mapper-locations: classpath:mybatis/mapper/*.xml
+
+minio:
+  endpoint: http://127.0.0.1:9000
+  accessKey: minioadmin
+  secretKey: minioadmin
 
 # 配置邮件服务
 spring:

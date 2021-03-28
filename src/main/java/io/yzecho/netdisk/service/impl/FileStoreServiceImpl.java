@@ -1,6 +1,7 @@
 package io.yzecho.netdisk.service.impl;
 
 import io.yzecho.netdisk.model.FileStore;
+import io.yzecho.netdisk.service.BaseService;
 import io.yzecho.netdisk.service.FileStoreService;
 import org.springframework.stereotype.Service;
 
@@ -10,34 +11,39 @@ import org.springframework.stereotype.Service;
  * @date 17/01/2021 13:14
  */
 @Service
-public class FileStoreServiceImpl implements FileStoreService {
+public class FileStoreServiceImpl extends BaseService implements FileStoreService {
     @Override
     public Integer addFileStore(FileStore fileStore) {
-        return null;
+        return fileStoreMapper.addFileStore(fileStore);
     }
 
     @Override
     public FileStore getFileStoreByUserId(Integer userId) {
-        return null;
+        return fileStoreMapper.getFileStoreByUserId(userId);
     }
 
     @Override
-    public FileStore getFileStoreById(Integer fileStoreId) {
-        return null;
+    public FileStore getFileStoreByFileStoreId(Integer fileStoreId) {
+        return fileStoreMapper.getFileStoreByFileStoreId(fileStoreId);
     }
 
     @Override
-    public Integer updateSize(Integer id, Integer size) {
-        return null;
+    public Integer addSize(Integer userId, Integer size) {
+        return fileStoreMapper.addSize(userId, size);
     }
 
     @Override
-    public Integer updatePermission(Integer id, Integer permission, Integer size) {
-        return null;
+    public Integer subSize(Integer fileStoreId, Integer size) {
+        return fileStoreMapper.subSize(fileStoreId, size);
     }
 
     @Override
-    public Integer deleteFileStoreById(Integer id) {
-        return null;
+    public Integer updatePermission(Integer userId, Integer permission, Integer size) {
+        return fileStoreMapper.updatePermission(userId, permission, size);
+    }
+
+    @Override
+    public Integer deleteByFileStoreId(Integer fileStoreId) {
+        return fileStoreMapper.deleteByFileStoreId(fileStoreId);
     }
 }

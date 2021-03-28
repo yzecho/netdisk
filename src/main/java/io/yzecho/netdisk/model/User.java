@@ -3,6 +3,7 @@ package io.yzecho.netdisk.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
  * @desc
  * @date 13/01/2021 00:00
  */
+@NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
@@ -23,9 +25,9 @@ public class User implements Serializable {
     private Integer userId;
 
     /**
-     * 用户openID
+     * 用户githubId
      */
-    private String openId;
+    private String githubId;
 
     /**
      * 文件仓库ID

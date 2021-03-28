@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="io.yzecho.netdisk.mapper.UserMapper">
-    <resultMap id="UserMap" type="io.yzecho.netdisk.model.User">
-        <result property="userId" column="user_id" jdbcType="OTHER"/>
-        <result property="openId" column="open_id" jdbcType="VARCHAR"/>
+    <resultMap id="userMap" type="io.yzecho.netdisk.model.User">
+        <id property="userId" column="user_id" />
+        <result property="githubId" column="github_id" jdbcType="VARCHAR"/>
         <result property="fileStoreId" column="file_store_id" jdbcType="INTEGER"/>
+        <result property="role" column="role" jdbcType="INTEGER"/>
         <result property="userName" column="user_name" jdbcType="VARCHAR"/>
         <result property="email" column="email" jdbcType="VARCHAR"/>
         <result property="password" column="password" jdbcType="VARCHAR"/>
         <result property="registerTime" column="register_time" jdbcType="TIMESTAMP"/>
         <result property="imagePath" column="image_path" jdbcType="VARCHAR"/>
-        <result property="role" column="role" jdbcType="INTEGER"/>
     </resultMap>
 
     <!--全部字段-->
     <sql id="allColumn"> user_id
-    , open_id, file_store_id, user_name,email,password,register_time, image_path,role</sql>
+    , github_id, file_store_id, user_name,email,password,register_time, image_path,role
+    </sql>
 
     <!--添加语句的字段列表-->
     <sql id="insertColumn">
-        <if test="openId != null and openId != ''">
-            open_id,
+        <if test="githubId != null and githubId != ''">
+            github_id,
         </if>
         <if test="fileStoreId != null">
             file_store_id,
@@ -44,8 +45,8 @@
 
     <!--添加语句的值列表-->
     <sql id="insertValue">
-        <if test="openId != null and openId != ''">
-            #{openId},
+        <if test="githubId != null and githubId != ''">
+            #{githubId},
         </if>
         <if test="fileStoreId != null">
             #{fileStoreId},
@@ -69,8 +70,8 @@
 
     <!--通用对User各个属性的值的非空判断-->
     <sql id="commonsValue">
-        <if test="openId != null and openId != ''">
-            open_id = #{openId},
+        <if test="githubId != null and githubId != ''">
+            github_id = #{githubId},
         </if>
         <if test="fileStoreId != null">
             file_store_id = #{fileStoreId},
@@ -104,7 +105,7 @@
     </insert>
 
     <!--删除user:通过主键-->
-    <delete id="deleteById">
+    <delete id="deleteUserByUserId">
         delete from user
         <where>
             user_id = #{userId}
@@ -112,9 +113,9 @@
     </delete>
 
     <!--查询单个user-->
-    <select id="queryById" resultMap="UserMap">
+    <select id="queryUserByUserId" resultMap="userMap">
         select
-        <include refid="allColumn"></include>
+        <include refid="allColumn"/>
         from user
         <where>
             user_id = #{userId}
@@ -122,19 +123,19 @@
     </select>
 
     <!--查询单个user-->
-    <select id="getUserByOpenId" resultMap="UserMap">
+    <select id="queryUserByGithubId" resultMap="userMap">
         select
-        <include refid="allColumn"></include>
+        <include refid="allColumn"/>
         from user
         <where>
-            open_id = #{openId}
+            github_id = #{githubId}
         </where>
     </select>
 
     <!--查询单个user-->
-    <select id="getUserByEmail" resultMap="UserMap">
+    <select id="queryUserByEmail" resultMap="userMap">
         select
-        <include refid="allColumn"></include>
+        <include refid="allColumn"/>
         from user
         <where>
             email = #{email}
@@ -142,9 +143,9 @@
     </select>
 
     <!--查询单个user-->
-    <select id="queryByEmailAndPwd" resultMap="UserMap">
+    <select id="queryUserByEmailAndPassword" resultMap="userMap">
         select
-        <include refid="allColumn"></include>
+        <include refid="allColumn"/>
         from user
         <where>
             email = #{email} and password = #{password}
@@ -152,19 +153,19 @@
     </select>
 
     <!--查询所有user-->
-    <select id="queryAllByLimit" resultMap="UserMap">
+    <select id="queryAllByLimit" resultMap="userMap">
         select
-        <include refid="allColumn"></include>
+        <include refid="allColumn"/>
         from user
     </select>
 
     <!--通过实体作为筛选条件查询-->
-    <select id="queryAll" resultMap="UserMap">
+    <select id="queryAll" resultMap="userMap">
         select
-        <include refid="allColumn"></include>
+        <include refid="allColumn"/>
         from user
         <trim prefix="where" prefixOverrides="and" suffixOverrides=",">
-            <include refid="commonsValue"></include>
+            <include refid="commonsValue"/>
         </trim>
     </select>
 
@@ -172,13 +173,13 @@
     <update id="update">
         update user
         <set>
-            <include refid="commonsValue"></include>
+            <include refid="commonsValue"/>
         </set>
         <where>
             user_id = #{userId}
         </where>
     </update>
-    <select id="getUsers" resultType="io.yzecho.netdisk.model.vo.UserVO">
+    <select id="queryUsers" resultType="io.yzecho.netdisk.model.vo.UserVO">
         SELECT u.user_id,
                user_name,
                image_path,

@@ -1,6 +1,7 @@
 package io.yzecho.netdisk.model.dto;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * @className: GitHubUser
@@ -9,8 +10,9 @@ import lombok.Data;
  * @date: 2021/3/8
  **/
 @Data
+@ToString
 public class GitHubUser {
-    private Long id;
+    private String id;
     private String name;
     private String bio;
     private String avatarUrl;

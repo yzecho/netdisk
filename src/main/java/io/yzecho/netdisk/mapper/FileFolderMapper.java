@@ -19,7 +19,11 @@ public interface FileFolderMapper {
      * @param fileFolderId
      * @return
      */
-    Integer deleteFileFolderById(Integer fileFolderId);
+    Integer deleteFileFolderByFileFolderId(Integer fileFolderId);
+
+    Integer deleteFileFolderByParentFolderId(Integer parentFolderId);
+
+    Integer deleteFileFolderByFileStoreId(Integer fileStoreId);
 
     /**
      * 创建文件夹
@@ -35,7 +39,7 @@ public interface FileFolderMapper {
      * @param fileFolderId
      * @return
      */
-    List<MyFile> getFileFolderById(Integer fileFolderId);
+    List<MyFile> getFilesByFileFolderId(Integer fileFolderId);
 
     /**
      * 根据父文件夹ID获得所有的子文件夹
@@ -53,19 +57,25 @@ public interface FileFolderMapper {
      */
     FileFolder getFileFolderByFileFolderId(Integer fileFolderId);
 
+    List<FileFolder> getFileFolderByFileStoreId(Integer fileStoreId);
+
     /**
      * 根据文件仓库ID获取文件仓库根目录下的所有文件夹
      *
      * @param fileStoreId
      * @return
      */
-    List<FileFolder> getRootFolderByFileStoreId(Integer fileStoreId);
+    List<FileFolder> getRootFoldersByFileStoreId(Integer fileStoreId);
 
     /**
      * 根据文件夹ID修改文件夹信息
      *
-     * @param fileFolderId
+     * @param fileFolder
      * @return
      */
-    Integer updateFileFolderById(Integer fileFolderId);
+    Integer updateFileFolderById(FileFolder fileFolder);
+
+    Integer getFileFolderCountByFileStoreId(Integer fileFolderId);
+
+
 }

@@ -92,7 +92,7 @@
 											<td style="font-weight: 300">-</td>
 											<td style="font-weight: 300">-</td>
 											<td style="font-weight: 300">-</td>
-											<td style="font-weight: 300" th:text="${#dates.format(folder.time,'yyyy-MM-dd HH:mm')}"></td>
+											<td style="font-weight: 300" th:text="${#temporals.format(folder.time,'yyyy-MM-dd HH:mm')}"></td>
 										</tr>
 										<tr th:each="f:${files}" class="files-items files">
 											<td><span style="display: none" th:text="${f.myFileId}"></span>
@@ -114,7 +114,7 @@
 											<td style="font-weight: 300" th:if="${f.size > 1024}" th:text="${f.size/1024 +'MB'}"></td>
 											<td style="font-weight: 300" th:if="${f.size < 1024}" th:text="${f.size +'KB'}"></td>
 											<td style="font-weight: 300" th:text="${f.downloadTime} + ' 次'"></td>
-											<td style="font-weight: 300" th:text="${#dates.format(f.uploadTime,'yyyy-MM-dd HH:mm')}">2020-02-02 15:08</td>
+											<td style="font-weight: 300" th:text="${#temporals.format(f.uploadTime,'yyyy-MM-dd HH:mm')}">2020-02-02 15:08</td>
 										</tr>
 									</table>
 								</div>
@@ -136,7 +136,7 @@
 				<span id="tarFile" style="display: none"></span>
 			</section>
 		</div>
-		<div th:replace="commons/bar::#footer"></div>
+<!--		<div th:replace="commons/bar::#footer"></div>-->
 	</div>
 </div>
 <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
@@ -182,8 +182,8 @@
 			return;
 		}
 		var location = window.location.href;
-		let strings = location.split("moti-cloud");
-		window.location.href = strings[0]+"moti-cloud/downloadFile?time="+new Date().getTime()+"&tip="+Math.random()*1000000+"&fId="+id;
+		let strings = location.split("baoda-cloud");
+		window.location.href = strings[0]+"baoda-cloud/downloadFile?time="+new Date().getTime()+"&tip="+Math.random()*1000000+"&fId="+id;
 	}
 </script>
 <script src="plug-ins/context-menu/js/jquery.contextMenu.min.js"></script>
@@ -214,9 +214,9 @@
 				text: " 分享",
 				callback: function() {
 					var location = window.location.href;
-					let strings = location.split("moti-cloud");
+					let strings = location.split("baoda-cloud");
 					$.ajax({
-						url:"getQrCode/?id="+$('#tarFile').html()+"&url="+strings[0]+"moti-cloud",
+						url:"getQrCode/?id="+$('#tarFile').html()+"&url="+strings[0]+"baoda-cloud",
 						type:"get",
 						async:false,
 						success:function(data){
@@ -248,9 +248,9 @@
 				callback: function() {
 					let id = $('#tarFile').html();
 					var location = window.location.href;
-					let strings = location.split("moti-cloud");
+					let strings = location.split("baoda-cloud");
 					if (id != ""){
-						window.location.href = strings[0]+"moti-cloud/deleteFile?fId="+id+"&folder="+$('#nowF').html();
+						window.location.href = strings[0]+"baoda-cloud/deleteFile?fId="+id+"&folder="+$('#nowF').html();
 					}else{
 						return;
 					}
@@ -312,9 +312,9 @@
 				callback: function() {
 					let id = $('#tarFolder').html();
 					var location = window.location.href;
-					let strings = location.split("moti-cloud");
+					let strings = location.split("baoda-cloud");
 					if (id != ""){
-						window.location.href = strings[0]+"moti-cloud/deleteFolder?fId="+id;
+						window.location.href = strings[0]+"baoda-cloud/deleteFolder?fId="+id;
 					}else{
 						return;
 					}
