@@ -1,8 +1,6 @@
 package io.yzecho.netdisk;
 
-import org.springframework.util.DigestUtils;
-
-import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 
 /**
  * @className: Pass
@@ -12,7 +10,6 @@ import java.nio.charset.StandardCharsets;
  **/
 public class Pass {
     public static void main(String[] args) {
-        String s = DigestUtils.md5DigestAsHex("liyuqi".getBytes(StandardCharsets.UTF_8));
-        System.out.println(s);
+        System.out.println(LocalDate.now().toString());
     }
 }

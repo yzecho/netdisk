@@ -80,7 +80,8 @@ public class MailUtil {
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         try {
             helper.setSubject("宝大网盘-邮箱验证");
-            helper.setText("<h2>宝大网盘-简洁、优雅、免费</h2>" +
+            helper.setText("" +
+                    "<h2>宝大网盘-简洁、优雅、免费</h2>" +
                     "<h3>用户注册-邮箱验证<h3/>" +
                     "您现在正在注册宝大网盘账号<br>" +
                     "验证码： <span style='color : red'>" + code + "</span><br>" +

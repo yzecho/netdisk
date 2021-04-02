@@ -29,4 +29,9 @@ public class MinioProp {
      * 密码
      */
     private String secretKey;
+
+    /**
+     * 域名
+     */
+    private String fileHost;
 }

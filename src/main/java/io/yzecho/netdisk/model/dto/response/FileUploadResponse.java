@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FileUploadResponse {
+public class FileUploadResponse{
 
     private String urlHttp;
 
