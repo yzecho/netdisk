@@ -1,7 +1,8 @@
 package io.yzecho.netdisk.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * @author yzecho
@@ -9,10 +10,11 @@ import org.slf4j.LoggerFactory;
  * @date 13/01/2021 19:55
  */
 public class LogUtil {
-    private static Logger logger;
+
+    private static Logger logger = LogManager.getLogger(LogUtil.class);
 
     public static Logger getInstance(Class<?> c) {
-        return logger = LoggerFactory.getLogger(c);
+        return logger = LogManager.getLogger(c);
     }
 
     private LogUtil() {

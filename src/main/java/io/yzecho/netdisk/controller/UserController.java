@@ -1,14 +1,13 @@
 package io.yzecho.netdisk.controller;
 
 import io.yzecho.netdisk.model.FileStore;
-import io.yzecho.netdisk.model.FileStoreStatistics;
 import io.yzecho.netdisk.model.User;
 import io.yzecho.netdisk.model.dto.AccessTokenDTO;
 
 import io.yzecho.netdisk.model.dto.GitHubUser;
 import io.yzecho.netdisk.utils.LogUtil;
 import io.yzecho.netdisk.utils.MailUtil;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.DigestUtils;
@@ -48,7 +47,7 @@ public class UserController extends BaseController {
         // password加密
         user.setPassword(DigestUtils.md5DigestAsHex(user.getPassword().getBytes(StandardCharsets.UTF_8)));
         // 默认头像
-        user.setImagePath("baoda-cloud/img/logo.png");
+        user.setImagePath("img/logo.png");
         user.setRegisterTime(LocalDateTime.now());
         user.setRole(1);
         if (userService.insert(user)) {
@@ -63,19 +62,6 @@ public class UserController extends BaseController {
             return "index";
         }
         session.removeAttribute(user.getEmail() + "_code");
-        session.setAttribute("loginUser", user);
-        return "redirect:/index";
-    }
-
-    /**
-     * Test
-     *
-     * @return
-     */
-    @GetMapping("/admin")
-    public String adminLogin() {
-        User user = userService.queryUserByGithubId("38834224");
-        logger.info("使用免登陆方式登录成功！" + user);
         session.setAttribute("loginUser", user);
         return "redirect:/index";
     }
@@ -167,6 +153,6 @@ public class UserController extends BaseController {
     public String logout() {
         logger.info("用户退出！");
         session.invalidate();
-        return "redirect:/index";
+        return "redirect:/";
     }
 }

@@ -1,6 +1,8 @@
 package io.yzecho.netdisk.utils;
 
 import io.minio.*;
+import io.minio.errors.*;
+import io.minio.http.Method;
 import io.minio.messages.Bucket;
 import io.yzecho.netdisk.config.MinioProp;
 import io.yzecho.netdisk.model.dto.response.FileUploadResponse;
@@ -9,11 +11,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * @className: MinioUtil
@@ -56,15 +64,13 @@ public class MinioUtil {
         if (file == null || file.getSize() == 0) {
             return null;
         }
-        String newFileName = null;
+        String newFileName = "";
+        String tempPathTitle = "temp";
         // 判断桶是否存在，不存在则新建
         createBucket(bucketName);
         String fileName = file.getOriginalFilename();
         if (fileName != null) {
-            newFileName = bucketName + "-" + System.currentTimeMillis() + "-"
-                    + LocalDate.now().toString() + "-"
-                    + new Random().nextInt(1000)
-                    + fileName.substring(fileName.lastIndexOf("."));
+            newFileName = tempPathTitle + "-" + System.currentTimeMillis() + "/" + fileName;
         }
         client.putObject(PutObjectArgs.builder()
                 .bucket(bucketName)
@@ -73,11 +79,11 @@ public class MinioUtil {
                 .contentType(file.getContentType())
                 .build());
 
-        String url = minioProp.getEndpoint() + "/" + bucketName + "/" + newFileName;
-        String host = minioProp.getFileHost() + "/" + bucketName + "/" + newFileName;
+        String url = minioProp.getEndpoint() + "/" + newFileName;
+        String path = bucketName + "/" + newFileName;
 
-        log.info("file upload success url: [{}], host:[{}]", url, host);
-        return new FileUploadResponse(url, host);
+        log.info("file upload success url: [{}], path:[{}]", url, path);
+        return new FileUploadResponse(url, path);
     }
 
     /**
@@ -110,7 +116,7 @@ public class MinioUtil {
      * @return
      */
     public String presignedGetObject(String bucketName, String objectName, Integer expires) throws Exception {
-        return client.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().bucket(bucketName).object(objectName).expiry(expires).build());
+        return client.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder().bucket(bucketName).object(objectName).method(Method.GET).expiry(expires).build());
     }
 
     /**
@@ -124,6 +130,19 @@ public class MinioUtil {
     public InputStream getObject(String bucketName, String objectName) throws Exception {
         return client.getObject(GetObjectArgs.builder().bucket(bucketName).object(objectName).build());
     }
+
+    /**
+     * 下载对象到项目根目录
+     *
+     * @param bucketName
+     * @param objectName
+     * @param fileName
+     * @throws Exception
+     */
+    public void downloadObject(String bucketName, String objectName, String fileName) throws Exception {
+        client.downloadObject(DownloadObjectArgs.builder().bucket(bucketName).object(objectName).filename(fileName).build());
+    }
+
 
     /**
      * 获取文件元数据

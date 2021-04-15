@@ -3,24 +3,25 @@
 <mapper namespace="io.yzecho.netdisk.mapper.FileFolderMapper">
     <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
 
-    <resultMap id="baseResultMap" type="io.yzecho.netdisk.model.FileFolder">
+    <resultMap id="BaseResultMap" type="io.yzecho.netdisk.model.FileFolder">
         <id column="file_folder_id" jdbcType="INTEGER" property="fileFolderId"/>
         <result column="file_folder_name" jdbcType="VARCHAR" property="fileFolderName"/>
         <result column="parent_folder_id" jdbcType="INTEGER" property="parentFolderId"/>
         <result column="file_store_id" jdbcType="INTEGER" property="fileStoreId"/>
     </resultMap>
 
+    <!--所有属性【文件夹id，文件夹名称，父文件夹id，文件仓库id】-->
     <sql id="Base_Column_List">
-        file_folder_id
-        , file_folder_name, parent_folder_id, file_store_id,time
+        <!--@mbg.generated-->
+        file_folder_id, file_folder_name, parent_folder_id, file_store_id,time
     </sql>
-
-    <sql id="All_Column_List">
-        my_file_id
-        , my_file_name, file_store_id, my_file_path, download_time, upload_time,
+    <!--文件的所有属性sql-->
+    <sql id="Base_Column_List1">
+        <!--@mbg.generated-->
+        my_file_id, my_file_name, file_store_id, my_file_path, download_time, upload_time,
         parent_folder_id
     </sql>
-
+    <!--添加属性sql-->
     <sql id="Base_Insert_Key_List">
         <if test="fileFolderName != null">
             file_folder_name,
@@ -35,7 +36,7 @@
             time,
         </if>
     </sql>
-
+    <!--添加值sql-->
     <sql id="Base_Insert_Value_List">
         <if test="fileFolderName != null">
             #{fileFolderName,jdbcType=VARCHAR},
@@ -50,7 +51,7 @@
             #{time},
         </if>
     </sql>
-
+    <!--修改sql-->
     <sql id="Base_Update_List">
         <if test="fileFolderName != null">
             file_folder_name = #{fileFolderName,jdbcType=VARCHAR},
@@ -63,81 +64,75 @@
         </if>
     </sql>
 
-    <select id="getFilesByFileFolderId" parameterType="java.lang.Integer" resultMap="baseResultMap">
+    <select id="getFileFolderByFileFolderId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
         select
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List" />
         from file_folder
-        where file_folder_id = #{fileFolderId, jdbcType=INTEGER}
+        where file_folder_id = #{fileFolderId,jdbcType=INTEGER}
     </select>
-
-    <select id="getFileFolderByParentFileFolderId" parameterType="java.lang.Integer" resultMap="baseResultMap">
+    <select id="getFileFolderByParentFileFolderId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
         select
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List" />
         from file_folder
         where parent_folder_id = #{parentFolderId,jdbcType=INTEGER}
     </select>
-
-    <select id="getFileFolderByFileStoreId" parameterType="java.lang.Integer" resultMap="baseResultMap">
+    <select id="getFileFolderByFileStoreId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
         select
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List" />
         from file_folder
         where file_store_id = #{fileStoreId,jdbcType=INTEGER}
     </select>
-
-    <select id="getRootFoldersByFileStoreId" parameterType="java.lang.Integer" resultMap="baseResultMap">
+    <select id="getRootFoldersByFileStoreId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        <!--@mbg.generated-->
         select
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List" />
         from file_folder
         where file_store_id = #{fileStoreId,jdbcType=INTEGER} and parent_folder_id = 0;
     </select>
-
-    <select id="getFileByFileFolder" parameterType="java.lang.Integer" resultType="io.yzecho.netdisk.model.MyFile">
+    <select id="getFilesByFileFolderId" parameterType="java.lang.Integer" resultType="io.yzecho.netdisk.model.MyFile">
+        <!--@mbg.generated-->
         select
-        <include refid="All_Column_List"/>
+        <include refid="Base_Column_List1" />
         from my_file
-        where parent_folder_id = #{parentFolderId, jdbcType=INTEGER}
+        where parent_folder_id = #{parentFolderId,jdbcType=INTEGER}
     </select>
-
     <delete id="deleteFileFolderByFileFolderId" parameterType="java.lang.Integer">
-        delete
-        from file_folder
-        where file_folder_id = #{fileFolderId, jdbcType=INTEGER}
+        <!--@mbg.generated-->
+        delete from file_folder
+        where file_folder_id = #{fileFolderId,jdbcType=INTEGER}
     </delete>
-
     <delete id="deleteFileFolderByParentFolderId" parameterType="java.lang.Integer">
-        delete
-        from file_folder
-        where parent_folder_id = #{parentFolderId, jdbcType=INTEGER}
+        <!--@mbg.generated-->
+        delete from file_folder
+        where parent_folder_id = #{parentFolderId,jdbcType=INTEGER}
     </delete>
-
     <delete id="deleteFileFolderByFileStoreId" parameterType="java.lang.Integer">
-        delete
-        from file_folder
-        where file_store_id = #{fileStoreId, jdbcType=INTEGER}
+        <!--@mbg.generated-->
+        delete from file_folder
+        where file_store_id = #{fileStoreId,jdbcType=INTEGER}
     </delete>
-
-    <insert id="addFileFolder" keyColumn="file_store_id" keyProperty="fileStoreId"
-            parameterType="io.yzecho.netdisk.model.FileFolder" useGeneratedKeys="true">
+    <insert id="addFileFolder" keyColumn="file_folder_id" keyProperty="fileFolderId" parameterType="io.yzecho.netdisk.model.FileFolder" useGeneratedKeys="true">
+        <!--@mbg.generated-->
         insert into file_folder
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <include refid="Base_Insert_Key_List"/>
+            <include refid="Base_Insert_Key_List" />
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <include refid="Base_Insert_Value_List"/>
+            <include refid="Base_Insert_Value_List" />
         </trim>
     </insert>
-
     <update id="updateFileFolderById" parameterType="io.yzecho.netdisk.model.FileFolder">
+        <!--@mbg.generated-->
         update file_folder
         <set>
-            <include refid="Base_Update_List"/>
+            <include refid="Base_Update_List" />
         </set>
-        where file_folder_id = #{fileFolderId, jdbcType=INTEGER}
+        where file_folder_id = #{fileFolderId,jdbcType=INTEGER}
     </update>
-
     <select id="getFileFolderCountByFileStoreId" resultType="java.lang.Integer">
-        select count(*)
-        from file_folder
-        where file_store_id = #{fileStoreId}
+        select count(*) from file_folder where file_store_id = #{id}
     </select>
 </mapper>

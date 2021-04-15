@@ -2,23 +2,23 @@ package io.yzecho.netdisk.controller;
 
 import io.yzecho.netdisk.constant.FileTypeConstant;
 import io.yzecho.netdisk.enums.FileEnum;
-import io.yzecho.netdisk.model.FileFolder;
-import io.yzecho.netdisk.model.FileStore;
-import io.yzecho.netdisk.model.FileStoreStatistics;
-import io.yzecho.netdisk.model.MyFile;
+import io.yzecho.netdisk.model.*;
 import io.yzecho.netdisk.utils.FtpUtil;
 import io.yzecho.netdisk.utils.LogUtil;
-import org.slf4j.Logger;
+import io.yzecho.netdisk.utils.QrCodeUtil;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -107,7 +107,7 @@ public class FileFtpController extends BaseController {
         } else {
             // 当前为具体目录，访问的文件夹不是当前登录用户所创建的文件夹
             FileFolder folder = fileFolderService.getFileFolderByFileFolderId(fId);
-            if (folder.getFileStoreId() - loginUser.getFileStoreId() != 0) {
+            if (!folder.getFileStoreId().equals(loginUser.getFileStoreId())) {
                 return "redirect:/error401Page";
             }
             // 当前为具体目录，访问的文件夹是当前登录用户所创建的文件夹
@@ -124,9 +124,6 @@ public class FileFtpController extends BaseController {
 
         Collections.reverse(location);
         // 获得统计信息
-        if (myFileService.getCountStatistics(loginUser.getFileStoreId()) == null) {
-
-        }
         FileStoreStatistics statistics = getOrDefaultFileStoreStatistics(loginUser.getFileStoreId());
         map.put("statistics", statistics);
         map.put("permission", fileStoreService.getFileStoreByUserId(loginUser.getUserId()).getPermission());
@@ -137,6 +134,77 @@ public class FileFtpController extends BaseController {
         logger.info("网盘页面域中的数据:" + map);
         return "u-admin/files";
     }
+
+    /**
+     * 上传临时文件(FTP)
+     *
+     * @param file
+     * @param url
+     * @return
+     */
+//    @PostMapping("/uploadTempFile")
+//    public String uploadTempFile(@RequestParam("file") MultipartFile file, String url) {
+//        session.setAttribute("imgPath", "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2654852821,3851565636&fm=26&gp=0.jpg");
+//        if (file != null && file.getOriginalFilename() != null) {
+//            String name = file.getOriginalFilename().replaceAll(" ", "");
+//            if (!checkFileName(name)) {
+//                logger.error("上传文件失败，文件名不符合规范");
+//                session.setAttribute("msg", "上传文件失败，文件名不符合规范");
+//                return "redirect:/temp-file";
+//            }
+//            // 临时文件最终上传在FTP服务器上中的路径为 "/temp/" + 当前时间戳 + UUID
+//            String path = "temp/" + DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm:ss").format(LocalDateTime.now())
+//                    + "/" + UUID.randomUUID();
+//            try {
+//                if (FtpUtil.uploadFile("/" + path, name, file.getInputStream())) {
+//                    logger.info("文件上传成功: {}", name);
+//                    String size = String.valueOf(file.getSize());
+//                    TempFile tempFile = TempFile.builder().fileName(name).filePath(path).size(size).uploadTime(new Date()).build();
+//                    if (tempFileService.insert(tempFile) == 1) {
+//                        try {
+//                            String id = UUID.randomUUID().toString();
+//                            String p = request.getSession().getServletContext().getRealPath("/user_img/");
+//                            StringBuilder sb = new StringBuilder();
+//                            url = sb.append(url).append("/file/share?t=").append(UUID.randomUUID().toString(), 0, 10)
+//                                    .append("&f=").append(tempFile.getFileId()).append("&p=").append(tempFile.getUploadTime())
+//                                    .append("&flag=2").toString();
+//                            File targetFile = new File(p, "");
+//                            if (!targetFile.exists()) {
+//                                boolean result = targetFile.mkdirs();
+//                                if (!result) {
+//                                    logger.error("mkdirs error");
+//                                }
+//                            }
+//                            File f = new File(p, id + ".jpg");
+//                            if (!f.exists()) {
+//                                OutputStream os = new FileOutputStream(f);
+//                                QrCodeUtil.encode(url, "/static/img/logo.png", os, true);
+//                                os.close();
+//                            }
+//                            tempFileService.deleteById(tempFile.getFileId());
+//                            session.setAttribute("imgPath", "user_img/" + id + ".jpg");
+//                            session.setAttribute("url", url);
+//                            session.setAttribute("msg", "上传成功，扫码/访问链接 即可下载！");
+//                            return "redirect:/temp-file";
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    } else {
+//                        logger.info("文件写入数据库失败: {}", name);
+//                        session.setAttribute("url", "error");
+//                        session.setAttribute("msg", "服务器出错了，临时文件上传失败");
+//                    }
+//                } else {
+//                    logger.info("临时文件上传失败: {}" + name);
+//                    session.setAttribute("url", "error");
+//                    session.setAttribute("msg", "服务器出错了，上传失败");
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return "redirect:/temp-file";
+//    }
 
     /**
      * 文件上传入口
@@ -240,10 +308,13 @@ public class FileFtpController extends BaseController {
     }
 
     private String showFiles(Map<String, Object> map, int typeCode) {
+        if (loginUser == null) {
+            logger.info("用户身份过期请重新登录");
+        }
+        map.put("files", myFileService.getFilesByType(loginUser.getFileStoreId(), typeCode));
         FileStoreStatistics statistics = myFileService.getCountStatistics(loginUser.getFileStoreId());
         map.put("statistics", statistics);
         map.put("permission", fileStoreService.getFileStoreByUserId(loginUser.getUserId()).getPermission());
-        map.put("files", myFileService.getFilesByType(loginUser.getFileStoreId(), typeCode));
 
         return switch (typeCode) {
             case FileTypeConstant.DOC_TYPE_FILE -> "u-admin/doc-files";
@@ -264,7 +335,9 @@ public class FileFtpController extends BaseController {
      */
     @PostMapping("/addFolder")
     public String addFolder(FileFolder fileFolder, Map<String, Object> map) {
-        fileFolder.setFileFolderId(loginUser.getFileStoreId());
+
+        // 设置文件夹信息
+        fileFolder.setFileStoreId(loginUser.getFileStoreId());
         fileFolder.setTime(LocalDateTime.now());
 
         List<FileFolder> folders;
@@ -279,7 +352,7 @@ public class FileFtpController extends BaseController {
         for (FileFolder folder : folders) {
             if (folder.getFileFolderName().equals(fileFolder.getFileFolderName())) {
                 logger.info("新建文件夹失败，该文件夹已存在");
-                return "redirect:/files?error=1&Id=" + fileFolder.getParentFolderId();
+                return "redirect:/files?error=1&fId=" + fileFolder.getParentFolderId();
             }
         }
 
@@ -320,8 +393,8 @@ public class FileFtpController extends BaseController {
                 return map;
             }
         }
-
-        String path = loginUser.getUserId() + "/" + LocalDateTime.now().toString() + "/" + folderId;
+        // FTP文件存储的路径为: 用户ID / 当前时间 / 文件所在文件夹ID
+        String path = loginUser.getUserId() + "/" + DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm:ss").format(LocalDateTime.now()) + "/" + folderId;
         if (!checkFileName(name)) {
             logger.error(FileEnum.FILE_NAME_NO_STANDER.getMsg());
             map.put("code", FileEnum.FILE_NAME_NO_STANDER.getCode());
@@ -383,6 +456,12 @@ public class FileFtpController extends BaseController {
         return map;
     }
 
+    /**
+     * 下载文件
+     *
+     * @param fId
+     * @return
+     */
     @GetMapping("/downloadFile")
     public String downloadFile(@RequestParam Integer fId) {
         if (fileStoreService.getFileStoreByUserId(loginUser.getUserId()).getPermission() == 2) {
@@ -482,17 +561,21 @@ public class FileFtpController extends BaseController {
      * @return
      */
     @GetMapping("/deleteFile")
-    public String deleteFile(@RequestParam(value = "fId") Integer fId, Integer folderId) {
-        MyFile file = myFileService.getFileByFileId(fId);
+    public String deleteFile(@RequestParam(value = "fId") String fId, @RequestParam(value = "folderId") String folderId) {
+        Integer fid = Integer.valueOf(fId);
+        MyFile file = myFileService.getFileByFileId(fid);
         String remotePath = file.getMyFilePath();
         String fileName = file.getMyFileName() + file.getPostfix();
         boolean res = FtpUtil.deleteFile("/" + remotePath, fileName);
         if (res) {
             fileStoreService.subSize(file.getFileStoreId(), file.getSize());
-            myFileService.deleteFileByFileId(fId);
+            myFileService.deleteFileByFileId(fid);
+            logger.info("删除文件成功：{}", file);
+        } else {
+            logger.info("删除文件失败：{}", file);
         }
-        logger.info("删除文件成功：{}", file);
-        return "redirect:/files?fId=" + folderId;
+
+        return "redirect:/files?folderId=" + folderId;
     }
 
     /**
@@ -513,7 +596,7 @@ public class FileFtpController extends BaseController {
      *
      * @param folder
      */
-    private void deleteFolderF(FileFolder folder) {
+    protected void deleteFolderF(FileFolder folder) {
         // 该文件夹为根目录的所有子文件夹
         List<FileFolder> folders = fileFolderService.getFileFolderByParentFileFolderId(folder.getParentFolderId());
 
@@ -535,6 +618,105 @@ public class FileFtpController extends BaseController {
     }
 
     /**
+     * 分享文件二维码
+     *
+     * @param id
+     * @param url
+     * @return
+     */
+    @GetMapping("/getQrCode")
+    @ResponseBody
+    public Map<String, Object> getQrCode(@RequestParam("id") Integer id, @RequestParam("url") String url) {
+        Map<String, Object> map = new HashMap<>(16);
+        map.put("imgPath", "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2654852821,3851565636&fm=26&gp=0.jpg");
+        if (id != null) {
+            MyFile file = myFileService.getFileByFileId(id);
+            try {
+                if (file != null) {
+                    String path = request.getSession().getServletContext().getRealPath("/user_img/");
+                    StringBuilder sb = new StringBuilder();
+                    url = sb.append(url).append("/file/share?t=").append(UUID.randomUUID().toString(), 0, 10)
+                            .append("&f=").append(file.getMyFileId()).append("&p=").append(file.getUploadTime())
+                            .append("&flag=1").toString();
+                    File targetFile = new File(path, "");
+                    if (!targetFile.exists()) {
+                        boolean result = targetFile.mkdirs();
+                        if (!result) {
+                            logger.error("mkdirs error");
+                        }
+                    }
+                    File f = new File(path, id + ".jpg");
+                    if (!f.exists()) {
+                        OutputStream os = new FileOutputStream(f);
+                        QrCodeUtil.encode(url, "/static/img/logo.png", os, true);
+                        os.close();
+                    }
+                    map.put("imgPath", "user_img/" + id + ".jpg");
+                    map.put("url", url);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return map;
+    }
+
+    /**
+     * 文件共享
+     *
+     * @param f    fileId
+     * @param p    uploadTime
+     * @param flag 非临时文件
+     * @return path
+     */
+    @GetMapping("/file/share")
+    public String shareFile(Integer f, String p, Integer flag) {
+        String remotePath = "";
+        String fileName = "";
+        String fileNameTemp;
+        int times = 0;
+        if (f == null || p == null || flag == null) {
+            logger.info("下载分享文件失败，参数错误");
+            return "redirect:/error400Page";
+        }
+
+        // 非临时文件
+        if (flag == 1) {
+            MyFile file = myFileService.getFileByFileId(f);
+            if (file == null) {
+                return "redirect:/error404Page";
+            }
+            String pwd = file.getUploadTime().toString();
+            if (!pwd.equals(p)) {
+                return "redirect:/error400Page";
+            }
+            remotePath = file.getMyFilePath();
+            fileName = file.getMyFileName() + file.getPostfix();
+        } else if (flag == 2) {
+            // 临时文件
+        } else {
+            return "redirect:/error400Page";
+        }
+        fileNameTemp = fileName;
+        try {
+            fileNameTemp = new String(fileNameTemp.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
+            OutputStream os = new BufferedOutputStream(response.getOutputStream());
+            response.setCharacterEncoding("utf-8");
+            response.setContentType("multipart/form-data");
+            response.setHeader("Content-Disposition", "attachment;fileName=" + fileNameTemp);
+            if (FtpUtil.downloadFile("/" + remotePath, fileName, os)) {
+                myFileService.updateFileByFileId(MyFile.builder().myFileId(f).downloadTime(times + 1).build());
+                os.flush();
+                os.close();
+                logger.info("文件下载成功: {}", fileName);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "success";
+    }
+
+    /**
      * 根据文件后缀名获得文件类型
      *
      * @param type
@@ -542,7 +724,7 @@ public class FileFtpController extends BaseController {
      */
     public int getFileType(String type) {
         if (".chm".equals(type) || ".txt".equals(type) || ".xmind".equals(type) || ".xlsx".equals(type) || ".md".equals(type)
-                || ".doc".equals(type) || ".docx".equals(type) || ".pptx".equals(type)
+                || ".doc".equals(type) || ".docx".equals(type) || ".pptx".equals(type) || ".xml".equals(type)
                 || ".wps".equals(type) || ".word".equals(type) || ".html".equals(type) || ".pdf".equals(type)) {
             return FileTypeConstant.DOC_TYPE_FILE;
         } else if (".bmp".equals(type) || ".gif".equals(type) || ".jpg".equals(type) || ".ico".equals(type) || ".vsd".equals(type)

@@ -2,10 +2,7 @@ package io.yzecho.netdisk.controller;
 
 import io.yzecho.netdisk.model.User;
 import io.yzecho.netdisk.provider.GitHubProvider;
-import io.yzecho.netdisk.service.FileFolderService;
-import io.yzecho.netdisk.service.FileStoreService;
-import io.yzecho.netdisk.service.MyFileService;
-import io.yzecho.netdisk.service.UserService;
+import io.yzecho.netdisk.service.*;
 import io.yzecho.netdisk.utils.MailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -30,6 +27,8 @@ public class BaseController {
     protected FileFolderService fileFolderService;
     @Autowired
     protected FileStoreService fileStoreService;
+    @Autowired
+    protected TempFileService tempFileService;
 
     @Autowired
     protected GitHubProvider gitHubProvider;

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 @Builder
-public class MyFile {
+public class MyFile implements Serializable {
 
     /**
      * 文件ID

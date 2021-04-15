@@ -66,7 +66,7 @@ public interface UserMapper {
      *
      * @return
      */
-    List<User> queryAll(User user);
+    List<User> queryAllByLimit(User user);
 
     /**
      * 更新用户
@@ -81,7 +81,7 @@ public interface UserMapper {
      *
      * @return
      */
-    List<UserVO> queryUsers();
+    List<UserVO> queryUserVOs();
 
     /**
      * 获取已注册的全部用户数

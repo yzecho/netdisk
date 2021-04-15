@@ -16,20 +16,14 @@ import java.util.Arrays;
  */
 public class FtpUtil {
 
-    /**
-     * yzecho mac ftp host
-     *
-     * private static final String HOST = "192.168.0.102";
-     * /
-     * /**
-     * admin mac ftp host
-     *private static final String HOST = "10.60.103.187";
-     */
+     // home mac ftp host
+//     private static final String HOST = "192.168.0.102";
 
-    /**
-     * ziru mac ftp host
-     */
-    private static final String HOST = "192.168.199.205";
+     // admin mac ftp host
+     private static final String HOST = "10.60.103.180";
+
+     // ziru mac ftp host
+//     private static final String HOST = "192.168.199.205";
 
     private static final int PORT = 21;
 

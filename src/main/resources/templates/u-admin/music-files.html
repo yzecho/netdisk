@@ -72,7 +72,7 @@
 									<td style="font-weight: 300" th:if="${f.size > 1024}" th:text="${f.size/1024 +'MB'}"></td>
 									<td style="font-weight: 300" th:if="${f.size < 1024}" th:text="${f.size +'KB'}"></td>
 									<td style="font-weight: 300" th:text="${f.downloadTime} + ' 次'"></td>
-									<td style="font-weight: 300" th:text="${#dates.format(f.uploadTime,'yyyy-MM-dd HH:mm')}">2020-02-02 15:08</td>
+									<td style="font-weight: 300" th:text="${#temporals.format(f.uploadTime,'yyyy-MM-dd HH:mm')}">2020-02-02 15:08</td>
 								</tr>
 							</table>
 						</div>

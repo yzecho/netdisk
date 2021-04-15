@@ -21,11 +21,14 @@
                 <h2 class="card-title">上传结果</h2>
                 <br>
                 <label>
-                    <img style="height: 200px" th:src="${session.imgPath}" alt="">
+                    <img style="height: 200px" th:src="${imgPath}" alt="">
                 </label>
-                <textarea class="form-control" th:text="${session.url}"></textarea>
+                <label>
+                    <textarea class="form-control" th:text="${url}"></textarea>
+                </label>
                 <br>
-                <p th:text="${session.msg}"></p>
+                <p th:text="${msg}"></p>
+                <p style="color: red">注: 仅4小时内有效</p><br>
                 <p class="badge-wrap">
                     <a href="/baoda-cloud" title="返回登录注册页面" class="badge btn-upload js-btn btn-success"><i class="fa fa-backward" aria-hidden="true"></i></a>
                 </p>

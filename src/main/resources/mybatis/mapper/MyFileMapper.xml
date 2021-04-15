@@ -162,11 +162,11 @@
     </select>
 
     <select id="getCountStatistics" resultType="io.yzecho.netdisk.model.FileStoreStatistics">
-        select sum(type = 1) doc,
-               sum(type = 2) image,
-               sum(type = 3) video,
-               sum(type = 4) music,
-               sum(type = 5) other,
+        select sum(type = 1) docNum,
+               sum(type = 2) imageNum,
+               sum(type = 3) videoNum,
+               sum(type = 4) musicNum,
+               sum(type = 5) otherNum,
                count(*)      fileCount
         from my_file
         where file_store_id = #{id}

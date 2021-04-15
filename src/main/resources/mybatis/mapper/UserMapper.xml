@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="io.yzecho.netdisk.mapper.UserMapper">
     <resultMap id="userMap" type="io.yzecho.netdisk.model.User">
-        <id property="userId" column="user_id" />
+        <id property="userId" column="user_id"/>
         <result property="githubId" column="github_id" jdbcType="VARCHAR"/>
         <result property="fileStoreId" column="file_store_id" jdbcType="INTEGER"/>
         <result property="role" column="role" jdbcType="INTEGER"/>
@@ -13,9 +13,20 @@
         <result property="imagePath" column="image_path" jdbcType="VARCHAR"/>
     </resultMap>
 
+    <resultMap id="UserVOMap" type="io.yzecho.netdisk.model.vo.UserVO">
+        <result property="userId" column="user_id" javaType="INTEGER"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="registerTime" column="register_time" jdbcType="TIMESTAMP"/>
+        <result property="imagePath" column="image_path" jdbcType="VARCHAR"/>
+        <result property="maxSize" column="max_size" javaType="INTEGER"/>
+        <result property="current" column="current" javaType="INTEGER"/>
+        <result property="permission" column="permission" javaType="INTEGER"/>
+    </resultMap>
+
     <!--全部字段-->
-    <sql id="allColumn"> user_id
-    , github_id, file_store_id, user_name,email,password,register_time, image_path,role
+    <sql id="allColumn">user_id
+        , github_id, file_store_id, user_name,email,password,register_time, image_path,role
     </sql>
 
     <!--添加语句的字段列表-->
@@ -142,25 +153,15 @@
         </where>
     </select>
 
-    <!--查询单个user-->
-    <select id="queryUserByEmailAndPassword" resultMap="userMap">
-        select
-        <include refid="allColumn"/>
-        from user
-        <where>
-            email = #{email} and password = #{password}
-        </where>
-    </select>
-
     <!--查询所有user-->
-    <select id="queryAllByLimit" resultMap="userMap">
+    <select id="queryAll" resultMap="userMap">
         select
         <include refid="allColumn"/>
         from user
     </select>
 
     <!--通过实体作为筛选条件查询-->
-    <select id="queryAll" resultMap="userMap">
+    <select id="queryAllByLimit" resultMap="userMap">
         select
         <include refid="allColumn"/>
         from user
@@ -179,18 +180,11 @@
             user_id = #{userId}
         </where>
     </update>
-    <select id="queryUsers" resultType="io.yzecho.netdisk.model.vo.UserVO">
-        SELECT u.user_id,
-               user_name,
-               image_path,
-               register_time,
-               u.email,
-               FLOOR(current_size / max_size * 100) `current`,
-               max_size,
-               permission
-        from user u
-                 INNER JOIN file_store f
-                            ON u.user_id = f.user_id
+    <select id="queryUserVOs" resultMap="UserVOMap">
+        SELECT u.user_id,user_name,image_path,register_time,u.email,FLOOR(current_size/max_size*100)
+        `current`,max_size,permission from user u
+        INNER JOIN file_store f
+        ON u.user_id = f.user_id
     </select>
     <select id="getUsersCount" resultType="java.lang.Integer">
         select count(*)

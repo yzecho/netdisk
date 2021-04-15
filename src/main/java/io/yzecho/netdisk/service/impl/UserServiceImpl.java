@@ -48,7 +48,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Override
     public List<User> queryAll(User user) {
-        return userMapper.queryAll(user);
+        return userMapper.queryAllByLimit(user);
     }
 
     @Override
@@ -57,8 +57,8 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public List<UserVO> queryUsers() {
-        return userMapper.queryUsers();
+    public List<UserVO> queryUserVOs() {
+        return userMapper.queryUserVOs();
     }
 
     @Override

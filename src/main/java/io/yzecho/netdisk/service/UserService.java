@@ -80,7 +80,7 @@ public interface UserService {
      *
      * @return
      */
-    List<UserVO> queryUsers();
+    List<UserVO> queryUserVOs();
 
     /**
      * 获取已注册的全部用户数

@@ -1,6 +1,6 @@
 package io.yzecho.netdisk.utils;
 
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;

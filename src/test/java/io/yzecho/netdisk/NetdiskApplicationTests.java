@@ -1,25 +1,38 @@
 package io.yzecho.netdisk;
 
-import io.yzecho.netdisk.utils.FtpUtil;
+import io.yzecho.netdisk.utils.MinioUtil;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 
 @SpringBootTest
 class NetdiskApplicationTests {
 
+    @Autowired
+    MinioUtil minioUtil;
+
     @Test
     void contextLoads() {
+        try {
+            InputStream inputStream = minioUtil.getObject("temp-bucket", "temp-1618315818333/yzecho.jpg");
+            File file = new File("/Users/admin/Desktop/yzecho.jpg");
+
+            try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+                bufferedOutputStream.write(inputStream.readAllBytes());
+            }
+            System.out.println("下载成功");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
         // 初始化连接
-        FtpUtil.initFtpClient();
-        boolean res = FtpUtil.existFile("/var");
-        System.out.println(res);
+//        FtpUtil.initFtpClient();
+//        boolean res = FtpUtil.existFile("/var");
+//        System.out.println(res);
 //        File file = new File("/Users/yecho/Desktop/demo.txt");
 //        FileInputStream inputStream = null;
 //        try {

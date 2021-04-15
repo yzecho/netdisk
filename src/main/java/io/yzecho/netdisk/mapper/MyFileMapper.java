@@ -52,7 +52,7 @@ public interface MyFileMapper {
      * @param record
      * @return
      */
-    Integer updateFile(MyFile record);
+    Integer updateFileByFileId(MyFile record);
 
     /**
      * 获取该仓库根目录下所有文件

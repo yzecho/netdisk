@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * @author yzecho
@@ -36,7 +37,7 @@ public class UserVO {
     /**
      * 注册时间
      */
-    private LocalDateTime registerTime;
+    private Date registerTime;
 
     /**
      * 头像地址

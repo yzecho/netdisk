@@ -37,7 +37,7 @@ public class MyFileServiceImpl extends BaseService implements MyFileService {
 
     @Override
     public Integer updateFileByFileId(MyFile record) {
-        return myFileMapper.updateFile(record);
+        return myFileMapper.updateFileByFileId(record);
     }
 
     @Override
