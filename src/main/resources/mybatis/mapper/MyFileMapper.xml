@@ -167,7 +167,7 @@
                sum(type = 3) videoNum,
                sum(type = 4) musicNum,
                sum(type = 5) otherNum,
-               count(*)      fileCount
+               count(*)      fileNum
         from my_file
         where file_store_id = #{id}
     </select>

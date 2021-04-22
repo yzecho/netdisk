@@ -57,12 +57,17 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public List<UserVO> queryUserVOs() {
-        return userMapper.queryUserVOs();
+    public List<UserVO> queryUserVOs(Integer page, Integer size) {
+        return userMapper.queryUserVOs(page, size);
     }
 
     @Override
     public Integer getUsersCount() {
         return userMapper.getUsersCount();
+    }
+
+    @Override
+    public Integer getUserFolderCount(Integer userId) {
+        return userMapper.getUserFolderCount(userId);
     }
 }

@@ -80,7 +80,7 @@ public interface UserService {
      *
      * @return
      */
-    List<UserVO> queryUserVOs();
+    List<UserVO> queryUserVOs(Integer page, Integer size);
 
     /**
      * 获取已注册的全部用户数
@@ -88,4 +88,11 @@ public interface UserService {
      * @return
      */
     Integer getUsersCount();
+
+    /**
+     * 获取用户的全部文件夹数
+     *
+     * @return
+     */
+    Integer getUserFolderCount(Integer userId);
 }

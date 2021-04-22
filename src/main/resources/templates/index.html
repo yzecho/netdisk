@@ -170,7 +170,7 @@
         }
         //设置button效果，开始计时
         $("#btnSendCode1").attr("disabled", "true");
-        $("#btnSendCode1").val(+curCount1 + "S 重发");
+        $("#btnSendCode1").val(+curCount1 + "s后重新发送");
         InterValObj1 = window.setInterval(SetRemainTime1, 1000); //启动计时器，1秒执行一次
         //向后台发送处理数据
         var email = $(".email").val();
@@ -203,7 +203,7 @@
             $("#btnSendCode1").val("重新发送");
         } else {
             curCount1--;
-            $("#btnSendCode1").val(+curCount1 + "S 重发");
+            $("#btnSendCode1").val(+curCount1 + "s后重新发送");
         }
     }
 

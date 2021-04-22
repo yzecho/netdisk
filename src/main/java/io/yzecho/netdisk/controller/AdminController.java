@@ -1,9 +1,12 @@
 package io.yzecho.netdisk.controller;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import io.yzecho.netdisk.model.*;
+import io.yzecho.netdisk.model.FileFolder;
+import io.yzecho.netdisk.model.FileStore;
+import io.yzecho.netdisk.model.FileStoreStatistics;
+import io.yzecho.netdisk.model.MyFile;
+import io.yzecho.netdisk.model.dto.PageRequestDTO;
 import io.yzecho.netdisk.model.vo.UserVO;
+import io.yzecho.netdisk.service.UserService;
 import io.yzecho.netdisk.utils.FtpUtil;
 import io.yzecho.netdisk.utils.LogUtil;
 import org.apache.logging.log4j.Logger;
@@ -28,6 +31,9 @@ public class AdminController extends BaseController {
     @Autowired
     private FileFtpController fileFtpController;
 
+    @Autowired
+    private UserService userService;
+
     private final Logger logger = LogUtil.getInstance(FileFtpController.class);
 
     @GetMapping("/managesUsers")
@@ -37,7 +43,7 @@ public class AdminController extends BaseController {
             return "redirect:/error401Page";
         }
         Integer usersCount = userService.getUsersCount();
-        cur = (cur == null || cur < 0) ? 0 : cur;
+        cur = (cur == null || cur <= 0) ? 0 : cur - 1;
         FileStoreStatistics countStatistics = myFileService.getCountStatistics(loginUser.getFileStoreId());
         if (countStatistics == null) {
             countStatistics = FileStoreStatistics.builder()
@@ -50,10 +56,11 @@ public class AdminController extends BaseController {
                     .videoNum(0)
                     .otherNum(0)
                     .build();
+        } else {
+            countStatistics.setFolderNum(userService.getUserFolderCount(loginUser.getUserId()));
         }
-        List<UserVO> users = userService.queryUserVOs();
-        PageHelper.clearPage();
-        Page<Object> page = PageHelper.startPage(cur, 20);
+        List<UserVO> users = userService.queryUserVOs(cur, 5);
+        PageRequestDTO page = new PageRequestDTO(cur, 5);
         map.put("statistics", countStatistics);
         map.put("users", users);
         map.put("page", page);

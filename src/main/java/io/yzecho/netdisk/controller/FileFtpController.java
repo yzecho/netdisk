@@ -3,10 +3,12 @@ package io.yzecho.netdisk.controller;
 import io.yzecho.netdisk.constant.FileTypeConstant;
 import io.yzecho.netdisk.enums.FileEnum;
 import io.yzecho.netdisk.model.*;
+import io.yzecho.netdisk.service.UserService;
 import io.yzecho.netdisk.utils.FtpUtil;
 import io.yzecho.netdisk.utils.LogUtil;
 import io.yzecho.netdisk.utils.QrCodeUtil;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +36,9 @@ public class FileFtpController extends BaseController {
 
     private final Logger logger = LogUtil.getInstance(FileFtpController.class);
 
+    @Autowired
+    private UserService userService;
+
     /**
      * 登录之后进入主页
      *
@@ -50,6 +55,7 @@ public class FileFtpController extends BaseController {
     private FileStoreStatistics getOrDefaultFileStoreStatistics(Integer fileStoreId) {
         FileStoreStatistics statistics = myFileService.getCountStatistics(fileStoreId);
         if (statistics != null) {
+            statistics.setFolderNum(userService.getUserFolderCount(loginUser.getUserId()));
             statistics.setFileStore(fileStoreService.getFileStoreByFileStoreId(loginUser.getFileStoreId()));
         } else {
             statistics = FileStoreStatistics.builder()
@@ -312,7 +318,7 @@ public class FileFtpController extends BaseController {
             logger.info("用户身份过期请重新登录");
         }
         map.put("files", myFileService.getFilesByType(loginUser.getFileStoreId(), typeCode));
-        FileStoreStatistics statistics = myFileService.getCountStatistics(loginUser.getFileStoreId());
+        FileStoreStatistics statistics = getOrDefaultFileStoreStatistics(loginUser.getFileStoreId());
         map.put("statistics", statistics);
         map.put("permission", fileStoreService.getFileStoreByUserId(loginUser.getUserId()).getPermission());
 
@@ -763,7 +769,7 @@ public class FileFtpController extends BaseController {
      */
     @GetMapping("/help")
     public String showHelp(Map<String, Object> map) {
-        FileStoreStatistics statistics = myFileService.getCountStatistics(loginUser.getFileStoreId());
+        FileStoreStatistics statistics = getOrDefaultFileStoreStatistics(loginUser.getFileStoreId());
         map.put("statistics", statistics);
         return "u-admin/help";
     }

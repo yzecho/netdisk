@@ -180,14 +180,17 @@
             user_id = #{userId}
         </where>
     </update>
-    <select id="queryUserVOs" resultMap="UserVOMap">
+    <select id="queryUserVOs" parameterType="java.lang.Integer" resultMap="UserVOMap">
         SELECT u.user_id,user_name,image_path,register_time,u.email,FLOOR(current_size/max_size*100)
         `current`,max_size,permission from user u
         INNER JOIN file_store f
-        ON u.user_id = f.user_id
+        ON u.user_id = f.user_id limit #{page}, #{size};
     </select>
     <select id="getUsersCount" resultType="java.lang.Integer">
         select count(*)
         from user;
+    </select>
+    <select id="getUserFolderCount" resultType="java.lang.Integer">
+        select count(1) from user u, file_folder ff where u.user_id = #{userId} and u.file_store_id = ff.file_store_id;
     </select>
 </mapper>
