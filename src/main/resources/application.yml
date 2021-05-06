@@ -98,3 +98,12 @@ oauth:
     client-id: 51019c989a28a1a8517e
     client-secret: ebbcf7ac3f1c6333ce4671193d4934c47951e1d2
     redirect-uri: http://localhost:8080/baoda-cloud/loginByGitHub
+
+ftp:
+  host: 192.168.0.105
+  port: 21
+  username: admin
+  password: admin
+  bufferSize: 10240
+  dataTimeOut: 600000
+  connectTimeout: 600000

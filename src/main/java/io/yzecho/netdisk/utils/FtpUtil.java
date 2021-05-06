@@ -4,6 +4,8 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -14,22 +16,57 @@ import java.util.Arrays;
  * @desc
  * @date 10/01/2021 14:36
  */
+@Component
 public class FtpUtil {
 
-     // home mac ftp host
-//     private static final String HOST = "192.168.0.102";
+    private static String host;
 
-     // admin mac ftp host
-     private static final String HOST = "10.60.103.180";
+    private static Integer port;
 
-     // ziru mac ftp host
-//     private static final String HOST = "192.168.199.205";
+    private static String username;
 
-    private static final int PORT = 21;
+    private static String password;
 
-    private static final String USERNAME = "admin";
+    private static Integer bufferSize;
 
-    private static final String PASSWORD = "admin";
+    private static Integer dataTimeOut;
+
+    private static Integer connectTimeout;
+
+    @Value("${ftp.host}")
+    public void setHost(String host) {
+        FtpUtil.host = host;
+    }
+
+    @Value("${ftp.port}")
+    public void setPort(Integer port) {
+        FtpUtil.port = port;
+    }
+
+    @Value("${ftp.username}")
+    public void setUsername(String username) {
+        FtpUtil.username = username;
+    }
+
+    @Value("${ftp.password}")
+    public void setPassword(String password) {
+        FtpUtil.password = password;
+    }
+
+    @Value("${ftp.bufferSize}")
+    public void setBufferSize(Integer bufferSize) {
+        FtpUtil.bufferSize = bufferSize;
+    }
+
+    @Value("${ftp.dataTimeOut}")
+    public void setDataTimeOut(Integer dataTimeOut) {
+        FtpUtil.dataTimeOut = dataTimeOut;
+    }
+
+    @Value("${ftp.connectTimeout}")
+    public void setConnectTimeout(Integer connectTimeout) {
+        FtpUtil.connectTimeout = connectTimeout;
+    }
 
     private static final String BASE_PATH = "";
 
@@ -40,25 +77,25 @@ public class FtpUtil {
      *
      * @return
      */
-    public static boolean initFtpClient() {
+    public static boolean initClient() {
         ftpClient = new FTPClient();
         int reply;
         try {
-            ftpClient.connect(HOST, PORT);
-            ftpClient.login(USERNAME, PASSWORD);
-            ftpClient.setBufferSize(10240);
-            ftpClient.setDataTimeout(600000);
-            ftpClient.setConnectTimeout(600000);
+            ftpClient.connect(host, port);
+            ftpClient.login(username, password);
+            ftpClient.setBufferSize(bufferSize);
+            ftpClient.setDataTimeout(dataTimeOut);
+            ftpClient.setConnectTimeout(connectTimeout);
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
             reply = ftpClient.getReplyCode();
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftpClient.disconnect();
-                return false;
+                return true;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return true;
+        return false;
     }
 
     /**
@@ -74,7 +111,7 @@ public class FtpUtil {
         try {
             filePath = new String(filePath.getBytes("GBK"), StandardCharsets.ISO_8859_1);
             filename = new String(filename.getBytes("GBK"), StandardCharsets.ISO_8859_1);
-            if (!initFtpClient()) {
+            if (initClient()) {
                 return false;
             }
             // 切换到上传目录
@@ -134,7 +171,7 @@ public class FtpUtil {
         try {
             remotePath = new String(remotePath.getBytes("GBK"), StandardCharsets.ISO_8859_1);
             filename = new String(filename.getBytes("GBK"), StandardCharsets.ISO_8859_1);
-            if (!initFtpClient()) {
+            if (initClient()) {
                 return false;
             }
             // 转移到FTP服务器目录
@@ -176,7 +213,7 @@ public class FtpUtil {
         try {
             remotePath = new String(remotePath.getBytes("GBK"), StandardCharsets.ISO_8859_1);
             filename = new String(filename.getBytes("GBK"), StandardCharsets.ISO_8859_1);
-            if (!initFtpClient()) {
+            if (initClient()) {
                 return false;
             }
 
@@ -219,7 +256,7 @@ public class FtpUtil {
         boolean result = false;
         try {
             remotePath = new String(remotePath.getBytes("GBK"), StandardCharsets.ISO_8859_1);
-            if (!initFtpClient()) {
+            if (initClient()) {
                 return false;
             }
             // 转移到FTP服务器目录
@@ -257,7 +294,7 @@ public class FtpUtil {
         try {
             oldName = new String(oldName.getBytes("GBK"), StandardCharsets.ISO_8859_1);
             newName = new String(newName.getBytes("GBK"), StandardCharsets.ISO_8859_1);
-            if (!initFtpClient()) {
+            if (initClient()) {
                 return false;
             }
             ftpClient.enterLocalPassiveMode();
@@ -288,7 +325,7 @@ public class FtpUtil {
         boolean result = false;
         try {
             filePath = new String(filePath.getBytes("GBK"), StandardCharsets.ISO_8859_1);
-            if (!initFtpClient()) {
+            if (initClient()) {
                 return false;
             }
             FTPFile[] fs = ftpClient.listFiles(filePath);
