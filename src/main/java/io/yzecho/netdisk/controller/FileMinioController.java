@@ -33,6 +33,7 @@ import java.util.UUID;
  * @date: 2021/4/1
  **/
 @Controller
+@CrossOrigin
 public class FileMinioController extends BaseController {
 
     private final Logger logger = LogUtil.getInstance(FileMinioController.class);

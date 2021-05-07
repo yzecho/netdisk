@@ -100,7 +100,7 @@ oauth:
     redirect-uri: http://localhost:8080/baoda-cloud/loginByGitHub
 
 ftp:
-  host: 192.168.0.105
+  host: 10.48.59.233
   port: 21
   username: admin
   password: admin
