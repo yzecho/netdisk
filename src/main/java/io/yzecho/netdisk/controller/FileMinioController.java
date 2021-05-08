@@ -58,12 +58,13 @@ public class FileMinioController extends BaseController {
                          String bucketName) {
         OBJ_MAP.put("imgPath", "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2654852821,3851565636&fm=26&gp=0.jpg");
         FileUploadResponse response;
+        String url;
         if (StringUtils.isBlank(bucketName)) {
             bucketName = "temp-bucket";
         }
         try {
             response = minioUtil.uploadFile(file, bucketName);
-            String url = "http://localhost:8080/minio/download/" + response.getUrlPath();
+             url = "http://localhost:8080/minio/download/" + response.getUrlPath();
             tempFileService.insert(TempFile.builder()
                     .fileName(file.getOriginalFilename())
                     .size(String.valueOf(file.getSize() / 1024.0))
